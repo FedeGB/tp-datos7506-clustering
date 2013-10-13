@@ -36,7 +36,6 @@ public:
 
 	void procesarArchivo();
 
-	void reemplazarPuntuacion(char& caracter);
 };
 
 #endif /* PARSER_H_ */

@@ -92,10 +92,6 @@ bool Parser::esStopword(const string& palabra,string stopwords[]){
 	return false;
 }
 
-void Parser::reemplazarPuntuacion(char& caracter){
-	caracter = ' ';
-}
-
 
 void Parser::quitarStopword(const string& stpWord, string& line){
 	unsigned posIni = line.find(stpWord);
