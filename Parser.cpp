@@ -76,7 +76,7 @@ void Parser::toLowerCase(string& palabra){
    	}
 }
 //Devuelve true si el caracter es una stopword
-bool Parser::esStopword(string palabra, string stopwords[]){
+bool Parser::esStopword(const string& palabra,string stopwords[]){
 	int Iarriba = (TAMANIO_STOPWORDS - 1);
 	int Iabajo = 0;
 	int Icentro;
@@ -93,25 +93,34 @@ bool Parser::esStopword(string palabra, string stopwords[]){
 	return false;
 }
 
-	void Parser::reemplazarStopword(string& palabra){
+void Parser::reemplazarStopword(string& palabra){
 	palabra = " ";
 }
+
+
+void Parser::quitarStopword(const string& stpWord, string& line){
+	int posIni = line.find(stpWord);
+	int posFinal = stpWord.length() + posIni;
+	line.erase(posIni,posFinal);
+}
+
 
 void Parser::procesarArchivo(){
 	string line;
 	string aux ="";
-	while(this->archivo.good()){
-		getline(this->archivo,line);
+	while(getline(this->archivo,line)){
+		this->toLowerCase(line);
 		string::iterator it = line.begin();
 		//tomo los caracteres hasta el primer whitespace
 		while (*it != ' ' && it!=line.end()){
 			aux = aux + *it;
 			it++;
 		};
-		this->toLowerCase(aux);
+		if (this->esStopword(aux,this->stopwords)) {
+			this->quitarStopword(aux,line);
+		}
 	}
-	cout << (this->esStopword(aux,this->stopwords)) << endl;
-	cout << aux << endl;
+
 }
 
 
