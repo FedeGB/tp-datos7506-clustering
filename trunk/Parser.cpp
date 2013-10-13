@@ -55,7 +55,6 @@ Parser::Parser(const string& path){
 	if (!this->archivo.good()){
 		this->archivo.close();
 	}
-	this->linea = "";
 }
 Parser::~Parser(){
 	if (this->archivo != NULL){
@@ -93,34 +92,30 @@ bool Parser::esStopword(const string& palabra,string stopwords[]){
 	return false;
 }
 
-void Parser::reemplazarStopword(string& palabra){
-	palabra = " ";
+void Parser::reemplazarPuntuacion(char& caracter){
+	caracter = ' ';
 }
 
 
 void Parser::quitarStopword(const string& stpWord, string& line){
-	int posIni = line.find(stpWord);
-	int posFinal = stpWord.length() + posIni;
-	line.erase(posIni,posFinal);
+	unsigned posIni = line.find(stpWord);
+	if (posIni != line.npos) {
+		line.erase(posIni,stpWord.length());
+	}
 }
 
 
 void Parser::procesarArchivo(){
 	string line;
-	string aux ="";
 	while(getline(this->archivo,line)){
+		string aux;
 		this->toLowerCase(line);
-		string::iterator it = line.begin();
-		//tomo los caracteres hasta el primer whitespace
-		while (*it != ' ' && it!=line.end()){
-			aux = aux + *it;
-			it++;
-		};
-		if (this->esStopword(aux,this->stopwords)) {
-			this->quitarStopword(aux,line);
+		stringstream stream(line);
+		while (getline(stream,aux, ' ')){
+			if (this->esStopword(aux,this->stopwords))
+				this->quitarStopword(aux,line);
 		}
 	}
-
 }
 
 

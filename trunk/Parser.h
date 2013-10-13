@@ -3,6 +3,8 @@
 #include <iostream>
 #include <cctype>
 #include <istream>
+#include <cstring>
+#include <sstream>
 
 #ifndef PARSER_H_
 #define PARSER_H_
@@ -13,7 +15,7 @@ class Parser{
 private:
 	static string stopwords[TAMANIO_STOPWORDS];
 	ifstream archivo;
-	string linea;
+
 	//Convierte palabra a minúscula
 	void toLowerCase(string& palabra);
 	//Devuelve true si la palabra es una stopword
@@ -30,7 +32,7 @@ public:
 
 	void procesarArchivo();
 
-	void reemplazarStopword(string& palabra);
+	void reemplazarPuntuacion(char& caracter);
 };
 
 #endif /* PARSER_H_ */
