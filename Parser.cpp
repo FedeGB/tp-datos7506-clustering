@@ -100,8 +100,20 @@ void Parser::reemplazarPuntuacion(char& caracter){
 void Parser::quitarStopword(const string& stpWord, string& line){
 	unsigned posIni = line.find(stpWord);
 	if (posIni != line.npos) {
-		line.erase(posIni,stpWord.length());
+		line.erase(posIni,stpWord.length()+1);
 	}
+}
+void Parser::quitarNotAlfaNum(string& line) {
+	unsigned i;
+	for(i = 0; i < line.length(); i++) {
+		int num_ascii = (int) line[i];
+		// Si no es una letra en minuscula, numero o espacio
+		if( !( ( (96 < num_ascii) && (num_ascii < 123) ) 
+			|| ( (47 < num_ascii) && (num_ascii < 58) ) 
+			|| (num_ascii == 32 ) ) ) {
+			line.erase(i, 1);
+		}
+	}			
 }
 
 
@@ -110,6 +122,7 @@ void Parser::procesarArchivo(){
 	while(getline(this->archivo,line)){
 		string aux;
 		this->toLowerCase(line);
+		quitarNotAlfaNum(line);
 		stringstream stream(line);
 		while (getline(stream,aux, ' ')){
 			if (this->esStopword(aux,this->stopwords))

@@ -5,6 +5,8 @@
 #include <istream>
 #include <cstring>
 #include <sstream>
+#include <iterator>
+#include <cstdlib>
 
 #ifndef PARSER_H_
 #define PARSER_H_
@@ -29,6 +31,8 @@ public:
 	bool eofDocument();
 
 	void quitarStopword(const string& stpWord, string& line);
+	
+	void quitarNotAlfaNum(string& line);
 
 	void procesarArchivo();
 
