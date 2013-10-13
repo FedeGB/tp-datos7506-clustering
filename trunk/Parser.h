@@ -17,7 +17,7 @@ private:
 	//Convierte palabra a minúscula
 	void toLowerCase(string& palabra);
 	//Devuelve true si la palabra es una stopword
-	bool esStopword(string palabra, string stopwords[]);
+	bool esStopword(const string& palabra,string stopwords[]);
 
 public:
 
@@ -26,7 +26,7 @@ public:
 	//Devuelve true si se llego al fin del archivo
 	bool eofDocument();
 
-	void quitarStopword(string& palabra);
+	void quitarStopword(const string& stpWord, string& line);
 
 	void procesarArchivo();
 
