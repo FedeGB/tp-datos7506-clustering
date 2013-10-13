@@ -1,13 +1,10 @@
-/*
- * main.cpp
- *
- *  Created on: 12/10/2013
- *      Author: eze
- */
+#include "Parser.h"
 
 int main() {
 
-
-
+	Parser *parser = new Parser("prueba.txt");
+	parser->procesarArchivo();
+	delete parser;
+	return 0;
 }
 

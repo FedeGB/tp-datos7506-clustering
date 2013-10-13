@@ -1,21 +1,18 @@
-/*
- * Parser.h
- *
- *  Created on: 12/10/2013
- *      Author: eze
- */
 #include <fstream>
 #include <string>
+#include <iostream>
+#include <cctype>
+#include <istream>
 
 #ifndef PARSER_H_
 #define PARSER_H_
-
+#define TAMANIO_STOPWORDS 584
 using namespace std;
 
 class Parser{
 private:
-	static string stopwords[584];
-	ifstream* archivo;
+	static string stopwords[TAMANIO_STOPWORDS];
+	ifstream archivo;
 	string linea;
 	//Convierte palabra a minúscula
 	void toLowerCase(string& palabra);
@@ -24,7 +21,7 @@ private:
 
 public:
 
-	Parser(const string path);
+	Parser(const string& path);
 	~Parser();
 	//Devuelve true si se llego al fin del archivo
 	bool eofDocument();
