@@ -17,7 +17,7 @@ class Parser{
 private:
 	static string stopwords[TAMANIO_STOPWORDS];
 	ifstream archivo;
-
+	unsigned k;
 	//Convierte palabra a minúscula
 	void toLowerCase(string& palabra);
 	//Devuelve true si la palabra es una stopword
@@ -25,7 +25,7 @@ private:
 
 public:
 
-	Parser(const string& path);
+	Parser(const string& path, unsigned largoDeShingle);
 	~Parser();
 	//Devuelve true si se llego al fin del archivo
 	bool eofDocument();
@@ -36,6 +36,7 @@ public:
 
 	void procesarArchivo();
 
+	string obtenerShingle();
 };
 
 #endif /* PARSER_H_ */

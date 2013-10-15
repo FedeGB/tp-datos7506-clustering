@@ -50,11 +50,12 @@ string Parser::stopwords[TAMANIO_STOPWORDS] = {"a", "able", "about", "above", "a
 		"with", "within", "without", "won't", "words", "world", "would", "wouldn't", "yes", "yet", "you", "you'll", "you've", "youd", "your", "youre",
 		"yours", "yourself", "yourselves"};
 
-Parser::Parser(const string& path){
+Parser::Parser(const string& path, unsigned largoDeShingle){
 	this->archivo.open(path.c_str());
 	if (!this->archivo.good()){
 		this->archivo.close();
 	}
+	this->k=largoDeShingle;
 }
 Parser::~Parser(){
 	if (this->archivo != NULL){
@@ -94,9 +95,9 @@ bool Parser::esStopword(const string& palabra,string stopwords[]){
 
 
 void Parser::quitarStopword(const string& stpWord, string& line){
-	unsigned posIni = line.find(stpWord);
+	unsigned posIni = line.find(" " + stpWord + " ");
 	if (posIni != line.npos) {
-		line.erase(posIni,stpWord.length()+1);
+		line.erase(posIni+1,stpWord.length()+1);
 	}
 }
 void Parser::quitarNotAlfaNum(string& line) {
@@ -126,6 +127,8 @@ void Parser::procesarArchivo(){
 		}
 	}
 }
+
+//string Parser::obtenerShingle(){}
 
 
 
