@@ -18,6 +18,7 @@ private:
 	static string stopwords[TAMANIO_STOPWORDS];
 	ifstream archivo;
 	unsigned k;
+	string lineaActual;
 	//Convierte palabra a minúscula
 	void toLowerCase(string& palabra);
 	//Devuelve true si la palabra es una stopword
@@ -34,9 +35,11 @@ public:
 	
 	void quitarNotAlfaNum(string& line);
 
-	void procesarArchivo();
-
 	string obtenerShingle();
+
+	bool tieneShingle();
+
+	string eliminarStopwords(string& line);
 };
 
 #endif /* PARSER_H_ */
