@@ -50,15 +50,16 @@ string Parser::stopwords[TAMANIO_STOPWORDS] = {"a", "able", "about", "above", "a
 		"with", "within", "without", "won't", "words", "world", "would", "wouldn't", "yes", "yet", "you", "you'll", "you've", "youd", "your", "youre",
 		"yours", "yourself", "yourselves"};
 
-Parser::Parser(const string& path, unsigned largoDeShingle){
+Parser::Parser(const string& path, unsigned largoDeShingle) {
 	this->archivo.open(path.c_str());
 	if (!this->archivo.good()){
 		this->archivo.close();
 	}
 	this->k=largoDeShingle;
+	getline(this->archivo,this->lineaActual);
 }
 Parser::~Parser(){
-	if (this->archivo != NULL){
+	if (this->archivo != NULL) {
 		this->archivo.close();
 	}
 }
@@ -68,15 +69,15 @@ bool Parser::eofDocument(){
 }
 
 //Convierte palabra a minúscula
-void Parser::toLowerCase(string& palabra){
+void Parser::toLowerCase(string& palabra) {
 	int i=0;
-	for(string::iterator it = palabra.begin(); it!=palabra.end(); ++it){
+	for(string::iterator it = palabra.begin(); it!=palabra.end(); ++it) {
     		palabra.at(i) = tolower(palabra.at(i));
 		i++;
    	}
 }
 //Devuelve true si el caracter es una stopword
-bool Parser::esStopword(const string& palabra,string stopwords[]){
+bool Parser::esStopword(const string& palabra,string stopwords[]) {
 	int Iarriba = (TAMANIO_STOPWORDS - 1);
 	int Iabajo = 0;
 	int Icentro;
@@ -94,7 +95,17 @@ bool Parser::esStopword(const string& palabra,string stopwords[]){
 }
 
 
-void Parser::quitarStopword(const string& stpWord, string& line){
+string Parser::eliminarStopwords(string& line) {
+	stringstream stream(line);
+	string aux;
+	while (getline(stream,aux, ' ')){
+		if (this->esStopword(aux,this->stopwords))
+			this->quitarStopword(aux,line);
+		}
+	return line;
+}
+
+void Parser::quitarStopword(const string& stpWord, string& line) {
 	unsigned posIni = line.find(" " + stpWord + " ");
 	if (posIni != line.npos) {
 		line.erase(posIni+1,stpWord.length()+1);
@@ -113,22 +124,28 @@ void Parser::quitarNotAlfaNum(string& line) {
 	}			
 }
 
-
-void Parser::procesarArchivo(){
-	string line;
-	while(getline(this->archivo,line)){
-		string aux;
-		this->toLowerCase(line);
-		quitarNotAlfaNum(line);
-		stringstream stream(line);
-		while (getline(stream,aux, ' ')){
-			if (this->esStopword(aux,this->stopwords))
-				this->quitarStopword(aux,line);
-		}
-	}
+string Parser::obtenerShingle() {
+	string aux;
+	this->toLowerCase(this->lineaActual);
+	this->eliminarStopwords(this->lineaActual);
+	this->quitarNotAlfaNum(this->lineaActual);
+	aux = this->lineaActual.substr(0,this->k);
+	this->lineaActual.erase(0,1);
+	return aux;
 }
 
-//string Parser::obtenerShingle(){}
+bool Parser::tieneShingle() {
+	string lineaSiguiente;
+	if (this->lineaActual.length() <= k){
+		if(archivo.good()){
+			getline(this->archivo,lineaSiguiente);
+			this->lineaActual = (' ' + lineaSiguiente);
+		}else {
+			return false;
+		}
+	}
+	return true;
+}
 
 
 

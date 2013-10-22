@@ -3,7 +3,9 @@
 int main() {
 
 	Parser *parser = new Parser("prueba.txt",7);
-	parser->procesarArchivo();
+	while (parser->tieneShingle()) {
+		cout << parser->obtenerShingle() << endl;
+	}
 	delete parser;
 	return 0;
 }
