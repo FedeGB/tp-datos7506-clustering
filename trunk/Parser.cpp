@@ -136,10 +136,10 @@ string Parser::obtenerShingle() {
 
 bool Parser::tieneShingle() {
 	string lineaSiguiente;
-	if (this->lineaActual.length() <= k){
+	if (this->lineaActual.length() < k){
 		if(archivo.good()){
 			getline(this->archivo,lineaSiguiente);
-			this->lineaActual = (' ' + lineaSiguiente);
+			this->lineaActual = (this->lineaActual + ' ' + lineaSiguiente);
 		}else {
 			return false;
 		}
