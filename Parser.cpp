@@ -134,8 +134,9 @@ void Parser::procesarLinea(string& line) {
 }
 
 string Parser::obtenerShingle() {
+	string aux = (this->lineaActual.substr(0,this->k));
 	this->lineaActual.erase(0,1);
-	return (this->lineaActual.substr(0,this->k));
+	return aux;
 }
 
 bool Parser::tieneShingle() {
