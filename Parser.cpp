@@ -56,13 +56,15 @@ Parser::Parser(const string& path, unsigned largoDeShingle) {
 		this->archivo.close();
 	}
 	this->k=largoDeShingle;
-	getline(this->archivo,this->lineaActual);
+	this->lineaActual = "";
 }
+
 Parser::~Parser(){
 	if (this->archivo != NULL) {
 		this->archivo.close();
 	}
 }
+
 //Devuelve true si se llego al fin del archivo
 bool Parser::eofDocument(){
 	return this->archivo.eof();
@@ -76,6 +78,7 @@ void Parser::toLowerCase(string& palabra) {
 		i++;
    	}
 }
+
 //Devuelve true si el caracter es una stopword
 bool Parser::esStopword(const string& palabra,string stopwords[]) {
 	int Iarriba = (TAMANIO_STOPWORDS - 1);
@@ -94,7 +97,6 @@ bool Parser::esStopword(const string& palabra,string stopwords[]) {
 	return false;
 }
 
-
 string Parser::eliminarStopwords(string& line) {
 	stringstream stream(line);
 	string aux;
@@ -111,6 +113,7 @@ void Parser::quitarStopword(const string& stpWord, string& line) {
 		line.erase(posIni+1,stpWord.length()+1);
 	}
 }
+
 void Parser::quitarNotAlfaNum(string& line) {
 	unsigned i;
 	for(i = 0; i < line.length(); i++) {
@@ -124,22 +127,26 @@ void Parser::quitarNotAlfaNum(string& line) {
 	}			
 }
 
+void Parser::procesarLinea(string& line) {
+	this->toLowerCase(line);
+	this->eliminarStopwords(line);
+	this->quitarNotAlfaNum(line);
+}
+
 string Parser::obtenerShingle() {
-	string aux;
-	this->toLowerCase(this->lineaActual);
-	this->eliminarStopwords(this->lineaActual);
-	this->quitarNotAlfaNum(this->lineaActual);
-	aux = this->lineaActual.substr(0,this->k);
 	this->lineaActual.erase(0,1);
-	return aux;
+	return (this->lineaActual.substr(0,this->k));
 }
 
 bool Parser::tieneShingle() {
-	string lineaSiguiente;
-	if (this->lineaActual.length() <= k){
+	while (this->lineaActual.length() < k){
+		string lineaSiguiente = "";
 		if(archivo.good()){
 			getline(this->archivo,lineaSiguiente);
-			this->lineaActual = (this->lineaActual + ' ' + lineaSiguiente);
+			if (!lineaSiguiente.empty()) {
+				this->lineaActual += ( " " + lineaSiguiente);
+				this->procesarLinea(this->lineaActual);
+			}
 		}else {
 			return false;
 		}

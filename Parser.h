@@ -35,6 +35,8 @@ public:
 	
 	void quitarNotAlfaNum(string& line);
 
+	void procesarLinea(string& line);
+
 	string obtenerShingle();
 
 	bool tieneShingle();
