@@ -56,7 +56,8 @@ Parser::Parser(const string& path, unsigned largoDeShingle) {
 		this->archivo.close();
 	}
 	this->k=largoDeShingle;
-	this->lineaActual = "";
+	getline(this->archivo,this->lineaActual);
+	this->procesarLinea(this->lineaActual);
 }
 
 Parser::~Parser(){
@@ -66,7 +67,7 @@ Parser::~Parser(){
 }
 
 //Devuelve true si se llego al fin del archivo
-bool Parser::eofDocument(){
+bool Parser::eofDocument() {
 	return this->archivo.eof();
 }
 
@@ -119,10 +120,16 @@ void Parser::quitarNotAlfaNum(string& line) {
 	for(i = 0; i < line.length(); i++) {
 		int num_ascii = (int) line[i];
 		// Si no es una letra en minuscula, numero o espacio
-		if( !( ( (96 < num_ascii) && (num_ascii < 123) ) 
-			|| ( (47 < num_ascii) && (num_ascii < 58) ) 
-			|| (num_ascii == 32 ) ) ) {
+		if( !( ( (96 < num_ascii) && (num_ascii < 123) )
+			|| ( (47 < num_ascii) && (num_ascii < 58) )
+			|| (num_ascii == 32) || (num_ascii == 45)
+			|| (num_ascii == 95)) ) {
 			line.erase(i, 1);
+		} else {
+			// Si es algun guion (medio o bajo)
+			if ((num_ascii == 45) || (num_ascii == 95)) {
+				line[i] = ' ';
+			}
 		}
 	}			
 }
@@ -140,7 +147,7 @@ string Parser::obtenerShingle() {
 }
 
 bool Parser::tieneShingle() {
-	while (this->lineaActual.length() < k){
+	while (this->lineaActual.length() < k) {
 		string lineaSiguiente = "";
 		if(archivo.good()){
 			getline(this->archivo,lineaSiguiente);
