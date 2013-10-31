@@ -56,8 +56,7 @@ Parser::Parser(const string& path, unsigned largoDeShingle) {
 		this->archivo.close();
 	}
 	this->k=largoDeShingle;
-	getline(this->archivo,this->lineaActual);
-	this->procesarLinea(this->lineaActual);
+	this->lineaActual = "";
 }
 
 Parser::~Parser(){
@@ -75,7 +74,7 @@ bool Parser::eofDocument() {
 void Parser::toLowerCase(string& palabra) {
 	int i=0;
 	for(string::iterator it = palabra.begin(); it!=palabra.end(); ++it) {
-    		palabra.at(i) = tolower(palabra.at(i));
+    	palabra.at(i) = tolower(palabra.at(i));
 		i++;
    	}
 }
@@ -102,36 +101,80 @@ string Parser::eliminarStopwords(string& line) {
 	stringstream stream(line);
 	string aux;
 	while (getline(stream,aux, ' ')){
-		if (this->esStopword(aux,this->stopwords))
+		quitarNotAlfaNum(aux,true);
+		if (this->esStopword(aux,this->stopwords)) {
 			this->quitarStopword(aux,line);
 		}
+	}
 	return line;
 }
 
 void Parser::quitarStopword(const string& stpWord, string& line) {
-	unsigned posIni = line.find(" " + stpWord + " ");
+	string actual = line;
+	unsigned posIni = line.find(stpWord);
+	unsigned i = posIni;
+	int idx;
+	while(i != actual.npos) {
+		if(i != 0) {
+			if((int)actual[i-1] != 32) {
+				actual = actual.substr(i+1);
+				i = actual.find(stpWord);
+				posIni += (i+1);
+				continue;
+			}
+		}
+		idx = 0;
+		while(stpWord[idx] == actual[i]) {
+			idx++;
+			i++;
+		}
+		if(esAlfaNum((int)actual[i])) { //Si es una letra o numero, no es stpWord
+			posIni += idx;
+			actual = actual.substr(i);
+			i = actual.find(stpWord);
+			posIni += i ;
+			continue;
+		} else {
+			break;
+		}
+	}
 	if (posIni != line.npos) {
-		line.erase(posIni+1,stpWord.length()+1);
+		line.erase(posIni,stpWord.length()+1);
 	}
 }
 
-void Parser::quitarNotAlfaNum(string& line) {
-	unsigned i;
-	for(i = 0; i < line.length(); i++) {
-		int num_ascii = (int) line[i];
-		// Si no es una letra en minuscula, numero o espacio
-		if( !( ( (96 < num_ascii) && (num_ascii < 123) )
-			|| ( (47 < num_ascii) && (num_ascii < 58) )
-			|| (num_ascii == 32) || (num_ascii == 45)
-			|| (num_ascii == 95)) ) {
-			line.erase(i, 1);
-		} else {
-			// Si es algun guion (medio o bajo)
-			if ((num_ascii == 45) || (num_ascii == 95)) {
-				line[i] = ' ';
-			}
-		}
-	}			
+bool Parser::esAlfaNum(int number) {
+                if( !( ( (96 < number) && (number < 123) )
+                        || ( (47 < number) && (number < 58) ) ) ) {
+					return false;
+				}
+				return true;
+}
+
+void Parser::quitarNotAlfaNum(string& line, bool bordes = false) {
+        unsigned i;
+        i = 0;
+        while(i < line.length()) {
+				if(bordes) {
+					if( i != 0 && i != line.length()-1) {
+						i++;
+						continue;
+					}
+				}
+                int num_ascii = (int) line[i];
+                // Si no es una letra en minuscula, numero o espacio
+                if( !( esAlfaNum(num_ascii) || (num_ascii == 32)
+						|| (num_ascii == 45)
+                        || (num_ascii == 95) ) ) {
+                        line.erase(i, 1);
+                } else {
+                        // Si es algun guion (medio o bajo)
+                        if ((num_ascii == 45) || (num_ascii == 95)) {
+                                line[i] = ' ';
+                        }
+                }
+                i++;
+        }                       
 }
 
 void Parser::procesarLinea(string& line) {
@@ -147,6 +190,11 @@ string Parser::obtenerShingle() {
 }
 
 bool Parser::tieneShingle() {
+	if(this->lineaActual == "") {
+		getline(this->archivo,this->lineaActual);
+		this->procesarLinea(this->lineaActual);
+	}
+	
 	while (this->lineaActual.length() < k) {
 		string lineaSiguiente = "";
 		if(archivo.good()){
