@@ -33,7 +33,9 @@ public:
 
 	void quitarStopword(const string& stpWord, string& line);
 	
-	void quitarNotAlfaNum(string& line);
+	bool esAlfaNum(int number);
+	
+	void quitarNotAlfaNum(string& line, bool bordes);
 
 	void procesarLinea(string& line);
 
