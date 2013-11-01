@@ -128,13 +128,13 @@ void Parser::quitarStopword(const string& stpWord, string& line) {
 			idx++;
 			i++;
 		}
-		if(esAlfaNum((int)actual[i])) { //Si es una letra o numero, no es stpWord
+		if(esAlfaNum((int)actual[i])) { // Si es una letra o numero, no es stpWord
 			posIni += idx;
 			actual = actual.substr(i);
 			i = actual.find(stpWord);
 			posIni += i ;
 			continue;
-		} else {
+		} else { // Si paso todo, es nuestra stpWord
 			break;
 		}
 	}
@@ -152,35 +152,65 @@ bool Parser::esAlfaNum(int number) {
 }
 
 void Parser::quitarNotAlfaNum(string& line, bool bordes = false) {
-        unsigned i;
-        i = 0;
-        while(i < line.length()) {
-				if(bordes) {
-					if( i != 0 && i != line.length()-1) {
-						i++;
-						continue;
+	unsigned i;
+	i = 0;
+	while(i < line.length()) {
+		if(bordes) {
+			if( i != 0 && i != line.length()-1) {
+				i++;
+				continue;
+			}
+		}
+		int num_ascii = (int) line[i];
+		// Si no es una letra en minuscula, numero o espacio
+		if( !( esAlfaNum(num_ascii) || (num_ascii == 32)
+				|| (num_ascii == 45)
+				|| (num_ascii == 95) ) ) {
+				line.erase(i, 1);
+		} else {
+				// Si es algun guion (medio o bajo)
+				if ((num_ascii == 45) || (num_ascii == 95)) {
+					if(i != 0 && i != line.length()-1 ) {	
+						if(esAlfaNum((int)line[i-1]) && esAlfaNum((int)line[i+1])) {
+							line[i] = ' ';
+							i++;
+							continue;
+						}
 					}
+					line.erase(i, 1);
 				}
-                int num_ascii = (int) line[i];
-                // Si no es una letra en minuscula, numero o espacio
-                if( !( esAlfaNum(num_ascii) || (num_ascii == 32)
-						|| (num_ascii == 45)
-                        || (num_ascii == 95) ) ) {
-                        line.erase(i, 1);
-                } else {
-                        // Si es algun guion (medio o bajo)
-                        if ((num_ascii == 45) || (num_ascii == 95)) {
-                                line[i] = ' ';
-                        }
-                }
-                i++;
-        }                       
+		}
+		i++;
+	}                       
+}
+
+void Parser::limpiarEspaciosMultiples(string& line) {
+	unsigned i, posIni;
+	i = 0;
+	int ascii;
+	int count = 0;
+	while( i < line.length() ) {
+		ascii = (int)line[i];
+		if( ascii == 32 ) {
+			if( count == 0 ) {
+				posIni = i;
+			}
+			count++;
+		} else {
+			if( count > 1 ) {
+				line.erase(posIni, count-1);
+			}
+			count = 0;
+		}
+		i++;
+	}
 }
 
 void Parser::procesarLinea(string& line) {
 	this->toLowerCase(line);
 	this->eliminarStopwords(line);
 	this->quitarNotAlfaNum(line);
+	this->limpiarEspaciosMultiples(line);
 }
 
 string Parser::obtenerShingle() {
