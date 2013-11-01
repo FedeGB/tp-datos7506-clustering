@@ -97,6 +97,7 @@ bool Parser::esStopword(const string& palabra,string stopwords[]) {
 	return false;
 }
 
+// Elimina las stopswords de la linea pasada como argumento
 string Parser::eliminarStopwords(string& line) {
 	stringstream stream(line);
 	string aux;
@@ -109,6 +110,8 @@ string Parser::eliminarStopwords(string& line) {
 	return line;
 }
 
+// Quita una stopword a una linea. Ambos pasados por parametro
+// Pre: stpWord debe ser una stopword (no se verifica en el metodo)
 void Parser::quitarStopword(const string& stpWord, string& line) {
 	string actual = line;
 	unsigned posIni = line.find(stpWord);
@@ -143,14 +146,22 @@ void Parser::quitarStopword(const string& stpWord, string& line) {
 	}
 }
 
+// Verifica si el numero ascii pasado por parametro es un numero
+// o una letra minuscula
+// Post: devuelve true en caso de serlo
 bool Parser::esAlfaNum(int number) {
-                if( !( ( (96 < number) && (number < 123) )
-                        || ( (47 < number) && (number < 58) ) ) ) {
-					return false;
-				}
-				return true;
+	if( !( ( (96 < number) && (number < 123) )
+			|| ( (47 < number) && (number < 58) ) ) ) {
+		return false;
+	}
+	return true;
 }
 
+// Quita los caracteres que no sean letras o numeros de la linea
+// pasada por argumento. Tambien recibe un booleano para indicar si
+// solo se quiere eliminar los caracteres no alfanumericos de los bordes
+// de la linea (este caso es mas util para cuando la linea es solo una palabra)
+// Por default el booleano de 'bordes' esta puesto en false
 void Parser::quitarNotAlfaNum(string& line, bool bordes = false) {
 	unsigned i;
 	i = 0;
@@ -184,6 +195,8 @@ void Parser::quitarNotAlfaNum(string& line, bool bordes = false) {
 	}                       
 }
 
+// Limpia los espacios multiples contiguos de una linea pasada por
+// argumento. Espacios multiples son considerados 2 o mas espacios contiguos
 void Parser::limpiarEspaciosMultiples(string& line) {
 	unsigned i, posIni;
 	i = 0;
@@ -206,6 +219,9 @@ void Parser::limpiarEspaciosMultiples(string& line) {
 	}
 }
 
+// Procesa la linea pasada por argumento
+// Post: la linea termian con sus caracteres en minuscula, sin stopwords, 
+// sin espacios multiples y unicamente con caracteres alfanumericos
 void Parser::procesarLinea(string& line) {
 	this->toLowerCase(line);
 	this->eliminarStopwords(line);
@@ -213,12 +229,14 @@ void Parser::procesarLinea(string& line) {
 	this->limpiarEspaciosMultiples(line);
 }
 
+// Devuelve un shingle del archivo
 string Parser::obtenerShingle() {
 	string aux = (this->lineaActual.substr(0,this->k));
 	this->lineaActual.erase(0,1);
 	return aux;
 }
 
+// Devuelve true en caso de haber shingles que se pueden extraer del documento
 bool Parser::tieneShingle() {
 	if(this->lineaActual == "") {
 		getline(this->archivo,this->lineaActual);
@@ -239,7 +257,3 @@ bool Parser::tieneShingle() {
 	}
 	return true;
 }
-
-
-
-
