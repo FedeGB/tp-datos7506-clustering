@@ -3,3 +3,8 @@ He studied at Caece University in Buenos Aires, where he was a professor for sev
 He also teaches Calculus, Complex Variables and Probability Theory in Universidad de Buenos Aires, Universidad Tecnologica Nacional and Escuela Superior Tecnica del Ejercito.
 His research works are mainly on Laplace Transform Methods, Elliptic Functions and Number Theory, where he recently proved a result concerning the distribution of prime numbers
 generalizing an inequality found by Erdos and Turan in 1948.
+This line doesn't make sense here really, really.
+Things done so far:
+-Parser
+
+TP-Clustering

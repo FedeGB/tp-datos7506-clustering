@@ -36,6 +36,8 @@ public:
 	bool esAlfaNum(int number);
 	
 	void quitarNotAlfaNum(string& line, bool bordes);
+	
+	void limpiarEspaciosMultiples(string& line);
 
 	void procesarLinea(string& line);
 
