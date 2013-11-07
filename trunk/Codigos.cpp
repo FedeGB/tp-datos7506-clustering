@@ -1,10 +1,3 @@
-/*
- * Codigos.cpp
- *
- *  Created on: 27 Jun 2013
- *      Author: GRUPO 19
- */
-
 #include "./Codigos.h"
 #include <cmath>
 #include <cstdlib>

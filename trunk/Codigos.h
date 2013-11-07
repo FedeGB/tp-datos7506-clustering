@@ -1,13 +1,6 @@
 #ifndef CODIFICACION_H
 #define CODIFICACION_H
 
-/*
- * Codigos.h
- *
- *  Created on: 27 Jun 2013
- *      Author: GRUPO 19
- */
-
 #include <cstddef>
 
 typedef unsigned char uchar;
