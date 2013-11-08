@@ -1,5 +1,6 @@
 #include "Indexador.h"
 
+// Clase contenedroa de un documento
 Document::Document(const string nombre, int numero) {
 	this->name = nombre;
 	this->number = numero;	
@@ -8,35 +9,50 @@ Document::Document(const string nombre, int numero) {
 Document::~Document() {
 }
 
+// Constructor del indexador
 Indexador::Indexador(const string dirPath) {
 	this->contador = 0;
 	this->Path = dirPath;
-	// http://manpages.courier-mta.org/htmlman3/scandir.3.html
-	this->cantidad = ::scandir(dirParh.c_str(), &ent_vector, &filtro, ::alphasort);
-
+	this->directorio = opendir(dirPath.c_str());
 }
 
 // Al indexar un directorio nos encontramos con '.' y '..'
-// Este metodo es para filtrar los mismos en el scandir
+// Este metodo es para filtrar los mismos
+// Tambien si unDirent es NULL pasaria el filtro
+// solo hay que fijarse despues que hacer con el
 int Indexador::filtro(const struct dirent *unDirent) {
-  return (strcmp(unDirent->d_name, ".") && strcmp(unDirent->d_name, ".."));
+	if(!unDirent) {
+		return 1;
+	}
+	return (strcmp(unDirent->d_name, ".") && strcmp(unDirent->d_name, ".."));
 }
 
+// Se fija si quedan archivos para indexar
+// Coloca el puntero en el siguiente archivo valido,
+// en caso de no haber mas retorna false
+// Pre: No toma en cuenta subdirectorios!
 bool Indexador::quedanArchivos() {
-	if(contador < cantidad)
+	this->actual = readdir(this->directorio);
+	while(!this->filtro(this->actual)) {
+		this->actual = readdir(this->directorio);
+	}
+
+	if(this->actual)
 		return true;
 	return false;
 }
 
-Document Indexador::obtenerDocumento() {
-	string nombreDoc(ent_vector[contador]->d_name);
-	// cout << "  Archivo indexado: " << nombreDoc;
-	::free(ent_vector[contador]);
-	Document doc = Document(nombreDoc, contador);
+// Devuelve un puntero a un objeto contenedor documento
+// Pre: Siempre hay que preguntar si quedan archivos antes de querer obtener uno nuevo
+// con el metodo 'quedanArchivos'
+Document* Indexador::obtenerDocumento() {
+	string nombreDoc(this->actual->d_name);
+	cout << "Archivo indexado: " << nombreDoc << "\n";
+	Document* doc = new Document(nombreDoc, contador);
 	this->contador++;
 	return doc;
 }
 
 Indexador::~Indexador() {
-	::free(ent_vector);
+	closedir(directorio);
 }
