@@ -120,9 +120,9 @@ void Parser::quitarStopword(const string& stpWord, string& line) {
 	while(i != actual.npos) {
 		if(i != 0) {
 			if((int)actual[i-1] != 32) {
-				actual = actual.substr(i+1);
+				actual = actual.substr(i);
 				i = actual.find(stpWord);
-				posIni += (i+1);
+				posIni += (i);
 				continue;
 			}
 		}
@@ -178,6 +178,7 @@ void Parser::quitarNotAlfaNum(string& line, bool bordes = false) {
 				|| (num_ascii == 45)
 				|| (num_ascii == 95) ) ) {
 				line.erase(i, 1);
+				i--;
 		} else {
 				// Si es algun guion (medio o bajo)
 				if ((num_ascii == 45) || (num_ascii == 95)) {
