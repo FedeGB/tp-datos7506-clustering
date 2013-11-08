@@ -37,7 +37,7 @@ uint64_t Hash::calcularFuncion(int numeroDeFuncion, unsigned char buffer[]) {
 	for (int i = 0; i<N; i++) {
 		resultado += (this->valoresGenerados[numeroDeFuncion][i]*buffer[i]);
 	}
-	return resultado;
+	return (resultado % M);
 }
 
 //Calcula la funcion correspondiente al numero pasado por parametro del valorAHashear
