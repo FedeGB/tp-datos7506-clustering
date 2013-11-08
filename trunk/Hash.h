@@ -15,7 +15,7 @@ using namespace std;
 class Hash {
 
 private:
-	unsigned long long int valoresGenerados[TAMANIO][N];
+	uint64_t valoresGenerados[TAMANIO][N];
 
 	void splitClave(uint64_t clave, unsigned char buffer[]);
 
