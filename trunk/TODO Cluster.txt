@@ -1,0 +1,23 @@
+TODO:
+*Indexador directorio [F]
+*Generador de funciones hash [E]
+-Universal
+-FNV
+*LSH
+*K-Means 
+-Obtencion K-lideres
+-Iteraciones
+-Finalizar automaticamente o con k fijado
+*Calidad de cluster
+*Persistencia
+-Codigos [F]
+-Jerarquia de archivos
+
+
+
+Referencias:
+E: Eze
+F: Fede
+I: Ivan
+*: Task
+-: Sub-task

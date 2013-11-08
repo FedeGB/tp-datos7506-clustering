@@ -17,7 +17,7 @@ int main() {
 		delete parser;
 		delete doc_actual;
 	}
-	cout << hash->aplicarHash(235641235412245461,4) << endl;
+	cout << "Resultado hash: " <<hash->aplicarHash(235641235412245461,4) << endl;
 	delete indexar;
 	delete hash;
 	return 0;
