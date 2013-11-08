@@ -1,21 +1,15 @@
 #include "Parser.h"
-#include "Indexador.h"
+#include "Hash.h"
 
 int main() {
-	
-	Indexador* indexar = new Indexador("./docs/");
-	Document* doc_actual;
-	Parser* parser;
-	while(indexar->quedanArchivos()) {
-		doc_actual = indexar->obtenerDocumento();
-		parser = new Parser(indexar->Path+doc_actual->name,7);
-		while (parser->tieneShingle()) {
-			cout << parser->obtenerShingle() << endl;
-		}
-		delete parser;
-		delete doc_actual;
-	}
-	delete indexar;
+
+	Parser *parser = new Parser("prueba.txt",7);
+	Hash *hash = new Hash();
+	/*while (parser->tieneShingle()) {
+		cout << parser->obtenerShingle() << endl;
+	}*/
+	cout << hash->aplicarHash(235641235412245461,4) << endl;
+	delete parser;
+	delete hash;
 	return 0;
 }
-
