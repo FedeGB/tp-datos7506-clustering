@@ -1,8 +1,12 @@
-#ifndef INDEXADOR_H
-#define INDEXADOR_H
+#include <iostream>
 #include <string>
 #include <dirent.h>
 #include <cstring>
+#include <stdlib.h>
+
+#ifndef INDEXADOR_H
+#define INDEXADOR_H
+using namespace std;
 
 class Document {
 	public:
@@ -16,9 +20,9 @@ class Document {
 
 class Indexador {
 	private:
-		struct dirent **ent_vector;
+		DIR *directorio;
+		struct dirent *actual;
 		int contador;
-		const int cantidad;
 		int filtro(const struct dirent *unDirent);
 		
 	public:
@@ -28,7 +32,7 @@ class Indexador {
 		~Indexador();
 		
 		bool quedanArchivos();
-		Document obtenerDocumento();
+		Document* obtenerDocumento();
 		
 };
 
