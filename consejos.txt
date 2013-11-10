@@ -1,0 +1,12 @@
+Les dejo algunos consejos de programación, algunos me surgieron por ver el código otros simplemente me los acuerdo. Si se los digo es porque en taller te queman el bocho con eso, y convengamos que acá tenemos que ser lo más performantes (si existe esa palabra) posible.
+
+- Todos los strings se pasan como referencia, si no se va a modificar como const string& (si se modifica igual pero sin el const)
+- Lo mismo que los strings para vectores, listas, y cosas pesadas, eviten la copia a toda costa (salvo integers y esas cosas)
+- SIEMPRE que definan una clase pongan el ifndef define endif bla bla
+- No hagan includes que no necesitan, ejemplo si usan iostream para probar, cuando terminan de probar lo sacan
+- Todos los includes que se puedan hacer en el .cpp y no en el .h van al cpp. Por ejemplo si uso strings, pero en el .h nunca aparece string, hago el include en el .cpp
+- Using namespace std NUNCA va en el .h, jamás. Y si pueden hagan los using (siempre en el .cpp) de lo que usan nada más tipo: using std::string; using std::cout; etc.
+- Usen el heap lo menos posible, declaren todo lo que puedan en el stack por ejemplo Hash* no sirve para nada, declaren directamente un Hash h. Disitinto es el Parser* que ahí no queda otra.
+- Declarar atributos públicos es feo, muy feo.
+- Referencia mata puntero jeje
+-

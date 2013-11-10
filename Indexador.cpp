@@ -1,4 +1,8 @@
 #include "Indexador.h"
+#include <cstring>
+#include <stdlib.h>
+
+using std::string;
 
 // Clase contenedroa de un documento
 Document::Document(const string nombre, int numero) {
@@ -47,7 +51,6 @@ bool Indexador::quedanArchivos() {
 // con el metodo 'quedanArchivos'
 Document* Indexador::obtenerDocumento() {
 	string nombreDoc(this->actual->d_name);
-	cout << "Archivo indexado: " << nombreDoc << "\n";
 	Document* doc = new Document(nombreDoc, contador);
 	this->contador++;
 	return doc;

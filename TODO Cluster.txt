@@ -3,7 +3,8 @@ TODO:
 *Generador de funciones hash [E]
 -Universal
 -FNV
-*LSH
+*LSH [I]
+*MinHash [I]
 *K-Means 
 -Obtencion K-lideres
 -Iteraciones
