@@ -1,19 +1,15 @@
-#include <iostream>
-#include <string>
-#include <dirent.h>
-#include <cstring>
-#include <stdlib.h>
-
 #ifndef INDEXADOR_H
 #define INDEXADOR_H
-using namespace std;
+
+#include <string>
+#include <dirent.h>
 
 class Document {
 	public:
-		string name;
+		std::string name;
 		int number;
 		
-		Document(const string nombre, int numero);
+		Document(const std::string nombre, int numero);
 		~Document();
 	
 };
@@ -26,16 +22,14 @@ class Indexador {
 		int filtro(const struct dirent *unDirent);
 		
 	public:
-		string Path;
+		std::string Path;
 
-		Indexador(const string dirPath);
+		Indexador(const std::string dirPath);
 		~Indexador();
 		
 		bool quedanArchivos();
 		Document* obtenerDocumento();
 		
 };
-
-
 
 #endif

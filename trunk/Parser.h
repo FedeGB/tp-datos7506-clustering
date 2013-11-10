@@ -1,51 +1,44 @@
-#include <fstream>
-#include <string>
-#include <iostream>
-#include <cctype>
-#include <istream>
-#include <cstring>
-#include <sstream>
-#include <iterator>
-#include <cstdlib>
-
 #ifndef PARSER_H_
 #define PARSER_H_
+
+#include <fstream>
+#include <string>
+
 #define TAMANIO_STOPWORDS 584
-using namespace std;
 
 class Parser{
 private:
-	static string stopwords[TAMANIO_STOPWORDS];
-	ifstream archivo;
+	static std::string stopwords[TAMANIO_STOPWORDS];
+	std::ifstream archivo;
 	unsigned k;
-	string lineaActual;
+	std::string lineaActual;
 	//Convierte palabra a minúscula
-	void toLowerCase(string& palabra);
+	void toLowerCase(std::string& palabra);
 	//Devuelve true si la palabra es una stopword
-	bool esStopword(const string& palabra,string stopwords[]);
+	bool esStopword(const std::string& palabra,std::string stopwords[]);
 
 public:
 
-	Parser(const string& path, unsigned largoDeShingle);
+	Parser(const std::string& path, unsigned largoDeShingle);
 	~Parser();
 	//Devuelve true si se llego al fin del archivo
 	bool eofDocument();
 
-	void quitarStopword(const string& stpWord, string& line);
+	void quitarStopword(const std::string& stpWord, std::string& line);
 	
 	bool esAlfaNum(int number);
 	
-	void quitarNotAlfaNum(string& line, bool bordes);
+	void quitarNotAlfaNum(std::string& line, bool bordes);
 	
-	void limpiarEspaciosMultiples(string& line);
+	void limpiarEspaciosMultiples(std::string& line);
 
-	void procesarLinea(string& line);
+	void procesarLinea(std::string& line);
 
-	string obtenerShingle();
+	std::string obtenerShingle();
 
 	bool tieneShingle();
 
-	string eliminarStopwords(string& line);
+	std::string eliminarStopwords(std::string& line);
 };
 
 #endif /* PARSER_H_ */

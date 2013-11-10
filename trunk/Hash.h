@@ -1,35 +1,27 @@
-#include <iostream>
-#include <random>
-#include <cstdlib>
-#include <iostream>
-#include <chrono>
-#include <stdint.h>
+#ifndef __HASH_H__
+#define __HASH_H__
 
-#ifndef HASH_H_
-#define HASH_H_
+#include <stdint.h>
+#include <vector>
+
 #define M 2305843009213693951
 #define TAMANIO 240
-#define N 8
-using namespace std;
+
 
 class Hash {
 
 private:
-	uint64_t valoresGenerados[TAMANIO][N];
+	std::vector<std::vector<uint64_t> > valoresGenerados;
+public:
+	explicit Hash(unsigned= TAMANIO);
+	~Hash();
+	uint64_t hashear(uint64_t, unsigned);
+private:
+	void splitClave(uint64_t, unsigned char[]);
 
-	void splitClave(uint64_t clave, unsigned char buffer[]);
-
-	uint64_t calcularFuncion(int numeroDeFuncion, unsigned char buffer[]);
+	uint64_t calcularFuncion(unsigned, unsigned char []);
 
 	uint64_t generarValorRandom();
-	
-public:
-	Hash();
-	
-	~Hash();
-
-	uint64_t aplicarHash(uint64_t valorAHashear, int numeroDeFuncion);
-
 };
 
 #endif /* HASH_H_ */

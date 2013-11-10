@@ -1,4 +1,7 @@
 #include "Parser.h"
+#include <cctype>
+#include <sstream>
+#include <iterator>
 
 
 using namespace std;

@@ -29,12 +29,6 @@ extension = cpp
 # Si usa gthreads, descomentá (quitale el '#' a) la siguiente línea.
 #gthreads = si
 
-# Si es un programa GTK+, descomentá (quitale el '#' a) la siguiente línea.
-#gtk = si
-
-# Si es un programa gtkmm, descomentá (quitale el '#' a) la siguiente línea.
-#gtkmm = si
-
 # Descomentar si se quiere ver como se invoca al compilador
 verbose = si
 
@@ -46,7 +40,7 @@ verbose = si
 CFLAGS = -Wall -pedantic -pedantic-errors
 
 # Para que explote lo mas posible
-#CFLAGS += -O3 -DNDEBUG
+CFLAGS += -O3 -DNDEBUG
 
 # Para valgrind o debug
 CFLAGS += -ggdb -DDEBUG -fno-inline
@@ -67,17 +61,6 @@ CXXSTD = c++11
 # VARIABLES CALCULADAS A PARTIR DE LA CONFIGURACION
 ####################################################
 
-# Agrego flags y libs de GTK+ de ser necesario.
-ifdef gtk
-CFLAGS += $(shell pkg-config --cflags gtk+-2.0)
-LDFLAGS += $(shell pkg-config --libs gtk+-2.0)
-endif
-
-# Agrego flags y libs de GTK+ de ser necesario.
-ifdef gtkmm
-CFLAGS += $(shell pkg-config --cflags gtkmm-2.4)
-LDFLAGS += $(shell pkg-config --libs gtkmm-2.4)
-endif
 
 # Agrego flags y libs de gthreads de ser necesario.
 ifdef gthreads
