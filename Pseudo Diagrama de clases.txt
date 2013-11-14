@@ -1,0 +1,55 @@
+*Sobre Documentos:
+	-Nos convendria tener una lista/vector con los punteros/referencias a los contenedores de los documentos.
+	 Esto es pues necesitamos tener acceso a cualquier contenedor documento en general
+	-Seria conveniente que los documentos tambien tengan un atributo para la suma del cuadrado de las distancias
+	 (tendria q ser una lista pues si el documento puede estar en mas de un cluster tendria mas de una suma y a su vez
+	 tendria que ser una especie de tupla con valor de la suma y cluster al cual pertenece). Esto nos evita tener que andar
+	 recalculando todas las sumas al cuadrado cada vez que se agrega un documento.
+
+*LSH
++distancia/similaridad entre doc1,doc2: podria ser pasando directamente numeros pues LSH trabaja con una matriz
++lideres(k): 
+	-Realmente no iria en K-Means, deberia ir en LSH devolviendo una lista con los k lideres. 
+	 Como tendriamos una lista/vectir con todos los docs la lista que devuelve pueden ser solo numeros
+	 Asi tambien es mas sencillo saber que documentos no comparar (solo se comparan los no lideres con los lideres).
+
+*Generar cluster (indicarle si un doc puede estar en mas de un cluster)
++calidad total
++contenedor clusters (mas de uno pues tenemos que comprar en caso de estar iterando?)
++K-Means (iterativo)
++obtenerKClusters: recibe referencia a LSH (los k lideres se los pide dentro)
+
+*Clusters (contenedor)
++Docs (set de documentos?)
++calidad: 
+	-q tenga la suma de similaridades y el promedio lo calcula cuando se le pide la calidad del mismo
+	 (se divide la suma de similaridades por n(n-1)/2 siendo n la cantidad de documentos en el cluster)
++agregarDoc: 
+	-cada vez q se agrega un doc se calcula la similaridad de este con los del cluster
+	-Como vamos a tener las similaridades con este nuevo doc, se le suma a la suma que lleva hasta el momento
+	-Tambien podemos calcular la distancia que es 1-similaridad, entonces tambien cada vez que agregamos un doc tenemos que ver
+	 cual es el nuevo doc que reduce la suma de las distancias al cuadrado para seleccionar el clusteroide.
++clusteroide
+
+
+Flujo del programa:
+
+*Preparacion matriz de hash LSH
+-indexar documentos
+-parsear
+-obtencion de numero de fila
+-pasar a LSH
+
+*Generar clusters (si nos dan k fijo o tenemos que buscarlo) 
+	*Aplicar K-Means  
+	-obtener k inicial sqrt(n)
+	-obtener k clusters comparando los docs con los k lideres
+	iteracion:
+	-dividir o redistribuir clusters para el k+1 y k-1 para ver a que rango vamos (tambien obtener calidad de k+1 y k-1)
+	-Si a diferencia de aumento de calidad entre k-1 y k es "notable" frente a k y k+1, avanzamos al siguiente k del rango siguiente
+	-Si la diferencia no es "notable" nos quedamos con el k actual y ya tenemos nuestros k clusters
+	*Sin aplicar K-Means
+	-obtener k cluster comparando los docs con los k lideres
+	-ya tenemos nuestros k cluster
+
+*Persistencia
