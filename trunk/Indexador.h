@@ -1,18 +1,8 @@
 #ifndef INDEXADOR_H
 #define INDEXADOR_H
 
-#include <string>
+#include "Document.h"
 #include <dirent.h>
-
-class Document {
-	public:
-		std::string name;
-		int number;
-		
-		Document(const std::string nombre, int numero);
-		~Document();
-	
-};
 
 class Indexador {
 	private:
