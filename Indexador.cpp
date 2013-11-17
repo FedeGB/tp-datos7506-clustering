@@ -4,15 +4,6 @@
 
 using std::string;
 
-// Clase contenedroa de un documento
-Document::Document(const string nombre, int numero) {
-	this->name = nombre;
-	this->number = numero;	
-}
-
-Document::~Document() {
-}
-
 // Constructor del indexador
 Indexador::Indexador(const string dirPath) {
 	this->contador = 0;

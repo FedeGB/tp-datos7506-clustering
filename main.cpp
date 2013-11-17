@@ -2,6 +2,7 @@
 #include "Hash.h"
 #include "Indexador.h"
 #include "minHash.h"
+#include "Document.h"
 #include <iostream>
 
 using namespace std;
