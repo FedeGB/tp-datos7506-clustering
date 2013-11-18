@@ -1,16 +1,14 @@
 *Sobre Documentos:
 	-Nos convendria tener una lista/vector con los punteros/referencias a los contenedores de los documentos.
 	 Esto es pues necesitamos tener acceso a cualquier contenedor documento en general
-	-Seria conveniente que los documentos tambien tengan un atributo para la suma del cuadrado de las distancias
-	 (tendria q ser una lista pues si el documento puede estar en mas de un cluster tendria mas de una suma y a su vez
-	 tendria que ser una especie de tupla con valor de la suma y cluster al cual pertenece). Esto nos evita tener que andar
-	 recalculando todas las sumas al cuadrado cada vez que se agrega un documento.
+	-Los documentos tiene un booleano para indicar si son clusteroide o no. Esto simplifica cuando vamos recorriendo el vector de
+   si tenemos que comparar ese documento con los otros (no lider) o no (lider/clusteroide)
 
 *LSH
-+distancia/similaridad entre doc1,doc2: podria ser pasando directamente numeros pues LSH trabaja con una matriz
-+lideres(k): 
++distancia/similaridad entre doc1,doc2: podria ser pasando directamente numeros pues LSH trabaja con una matriz (eso o referencia/puntero a los contenedores documento)
++lideres(k): Para pedir k lideres.
 	-Realmente no iria en K-Means, deberia ir en LSH devolviendo una lista con los k lideres. 
-	 Como tendriamos una lista/vectir con todos los docs la lista que devuelve pueden ser solo numeros
+	 Como tendriamos una lista/vectir con todos los docs la lista que devuelve pueden ser solo numeros (total el vector y la matriz de LSH tienen el mismo orden)
 	 Asi tambien es mas sencillo saber que documentos no comparar (solo se comparan los no lideres con los lideres).
 
 *Generar cluster (indicarle si un doc puede estar en mas de un cluster)
@@ -20,7 +18,7 @@
 +obtenerKClusters: recibe referencia a LSH (los k lideres se los pide dentro)
 
 *Clusters (contenedor)
-+Docs (set de documentos?)
++Docs (set de documentos? Tambien cada doc en el set o lo que usemos deberia tener asociada la suma de la distancia al cuadrado y que esto este ordenado por ese numero siendo el menor el primero
 +calidad: 
 	-q tenga la suma de similaridades y el promedio lo calcula cuando se le pide la calidad del mismo
 	 (se divide la suma de similaridades por n(n-1)/2 siendo n la cantidad de documentos en el cluster)
@@ -29,7 +27,7 @@
 	-Como vamos a tener las similaridades con este nuevo doc, se le suma a la suma que lleva hasta el momento
 	-Tambien podemos calcular la distancia que es 1-similaridad, entonces tambien cada vez que agregamos un doc tenemos que ver
 	 cual es el nuevo doc que reduce la suma de las distancias al cuadrado para seleccionar el clusteroide.
-+clusteroide
++clusteroide (si tenemos los docs ordenados por suma de distancias al cuadrado esto no hace falta pues el primero en la lista es nuestro clusteroide)
 
 
 Flujo del programa:
