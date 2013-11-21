@@ -5,7 +5,7 @@
 
 class Document {
 	private:
-		bool clusteroid;
+		bool clusteroide;
 	
 	public:
 		std::string name;

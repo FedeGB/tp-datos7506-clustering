@@ -16,7 +16,7 @@ minHash::~minHash(){}
 void minHash::doMinHash(const string& shingle, vector<uint64_t>& vHash){
 	uint64_t numFila = this->calcFila(shingle);
 	for (unsigned i = 0; i < MAXHASH; i++){
-		vHash.push_back(this->hashing.hashear(numFila,i));
+		vHash[i] = (this->hashing.hashear(numFila,i));
 	}
 }
 
