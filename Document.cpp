@@ -6,7 +6,7 @@ using std::string;
 Document::Document(const string nombre, unsigned int numero) {
 	this->name = nombre;
 	this->number = numero;	
-	this->clusteroid = false;
+	this->clusteroide = false;
 }
 
 bool Document::isCluteroid() {
