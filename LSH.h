@@ -13,6 +13,8 @@ private:
 public:
 	LSH(unsigned,std::vector<std::vector<uint64_t>*>&);
 	void doLsh();
+	void getKLeaders(unsigned, std::vector<unsigned>&);
+	double distancia(unsigned,unsigned);
 	~LSH();
 };
 
