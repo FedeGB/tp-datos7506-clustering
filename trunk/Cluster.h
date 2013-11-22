@@ -3,24 +3,35 @@
 
 #include <set>
 #include "Document.h"
+#include "LSH.h"
 
-// bool ncomp(Document* x, Document* y);
-// bool(*fncompt)(Document*, Document*) = ncomp;
+class Dupla {
+	public:
+		Document* documento;
+		double sqdistance;
+		Dupla(Document *doc, double dist);
+		void sumarDistancia(double dist);
+		~Dupla();
+		
+};
 
-// class Cluster {
-// 	private:
-// 		std::set<Document*, bool(*)(Document*, Document*)> documentos(fncompt); // documentos pertenecientes al cluster ordenados por numero
-// 		Document* clusteroide; // documento clusteroide
-// 		float sumSim; // suma de las similaridades entre documentos
+bool ncomp(Dupla* x, Dupla* y);
+
+
+
+class Cluster {
+	private:
+		std::set<Dupla*, bool(*)(Dupla*, Dupla*)> documentos; // documentos pertenecientes al cluster ordenados por numero
+		double sumSim; // suma de las similaridades entre documentos
 		
-// 	public:
-// 		Cluster(Document* lider);
-// 		void agregarDoc(Document* doc, LSH& lsh); // Recibe la referencia del LSH para pedirle similaridades
-// 		float calidad();
-// 		Document* getClusteroide();
-// 		~Cluster();
+	public:
+		Cluster(Document* lider);
+		void agregarDoc(Document* doc, LSH& lsh); // Recibe la referencia del LSH para pedirle similaridades
+		double calidad();
+		Document* getClusteroide();
+		~Cluster();
 		
-// };
+};
 
 
 #endif
