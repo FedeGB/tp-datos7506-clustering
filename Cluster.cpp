@@ -2,38 +2,58 @@
 
 using std::set;
 
-// bool ncomp(Document* x, Document* y) { 
-	
-// 	return x->number < y->number;
-// }
+bool ncomp(Dupla* x, Dupla* y) { 
+	return x->sqdistance < y->sqdistance;
+}
 
-// Cluster::Cluster(Document* lider) {
-// 	this->clusteroide = lider;
-// 	this->documentos.insert(lider);
-// 	lider->makeClusteroid();
-// 	this->sumSim = 0;	
-// }
+Dupla::Dupla(Document* doc, double dist) {
+	this->documento = doc;
+	this->sqdistance = dist;
+}
 
-// float Cluster::calidad() {
-// 	unsigned int n = this->documentos.size();
-// 	return (this->sumSim / ((n*(n-1))/2));
-// }
+void Dupla::sumarDistancia(double dist) {
+	this->sqdistance += dist*dist;
+}
+
+Dupla::~Dupla() { }
+
+Cluster::Cluster(Document* lider) {
+	bool(*fncompt)(Dupla*, Dupla*) = ncomp;
+	set<Dupla*, bool(*)(Dupla*, Dupla*)> documentos(fncompt);
+	Dupla* dupla = new Dupla(lider, 0);
+	this->documentos.insert(dupla);
+	lider->makeClusteroid();
+	this->sumSim = 0;	
+}
+
+double Cluster::calidad() {
+	unsigned int n = this->documentos.size();
+	return (this->sumSim / ((n*(n-1))/2));
+}
 
 
-// Document* getClusteroide() {
-// 	return this->clusteroide;
-// }
+Document* Cluster::getClusteroide() {
+	return (*(documentos.begin()))->documento;
+}
 
-// void agregarDoc(Document* doc, LSH& lsh) {
-// 	// Ahora estan ordenados por numero, habria q ver de ordenarlos por suma de distancia al cuadrado dentro del cluster
-// 	for(std::set<Document*>::iterator it = this->documentos.begin(); it != this->documentos.end(); ++it) {
-// 		// Calculo de similaridad  de doc con docs del cluster, LSH
-// 		// sumSim += etc
-// 		// sumamos distancia al cuadrada de la distancia actual a ambos documentos
-// 	}
-// 	this->documentos.insert(doc);
-// 	// Si los tenemos ordenados por suma de sitancias al cuadrado el clusteroide lo podemos sacar tomando el primero del set o container que usemos
-// 	// Sino habria q fijarse cual es el de menos suma de dist al cuadrado y ponerlo como clusteroide
-// 	// De todas formas hay que marcar al documento correspondiente como lider y desmarcar al anterior si hubo cambio
-		
-// }
+void Cluster::agregarDoc(Document* doc, LSH& lsh) {
+	unsigned numero_act;
+	double dist_act, aux;
+	Dupla *dupla_act, *dupla_insert, *dupla_reemplazo;
+	dupla_insert = new Dupla(doc, 0);
+	for(std::set<Dupla*>::iterator it = this->documentos.begin(); it != this->documentos.end(); ++it) {
+		dupla_act = *it;
+		numero_act = dupla_act->documento->number;
+		dist_act = lsh.distancia(numero_act, doc->number);
+		this->sumSim += (1-dist_act);
+		dupla_insert->sumarDistancia(dist_act);
+		dupla_reemplazo = new Dupla(dupla_act->documento, dupla_act->sqdistance);
+		dupla_reemplazo->sumarDistancia(dist_act);
+		delete dupla_act;
+		documentos.erase(it);
+		documentos.insert(dupla_reemplazo);
+	}
+	this->documentos.insert(dupla_insert);		
+}
+
+Cluster::~Cluster() { }

@@ -13,7 +13,7 @@ bool Document::isCluteroid() {
 	return this->clusteroide;
 }
 
-void Document::makeCluseroid() {
+void Document::makeClusteroid() {
 	this->clusteroide = true;
 }
 
