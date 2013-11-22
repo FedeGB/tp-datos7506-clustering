@@ -32,6 +32,12 @@ int main() {
 	LSH lsHashing(cantDocs,hashDocs);
 	lsHashing.doLsh();
 
+	for (int i = 0; i < cantDocs; i++){
+		for (int j = 0; j < cantDocs; j++){
+			cout<<"Distancia "<<i<<" "<<j<<": "<<lsHashing.distancia(i,j)<<endl;
+		}
+	}
+
 	for (vector<vector<uint64_t>*>::iterator it = hashDocs.begin(); it != hashDocs.end(); ++it){
 		delete (*it);
 	}
