@@ -56,4 +56,8 @@ void Cluster::agregarDoc(Document* doc, LSH& lsh) {
 	this->documentos.insert(dupla_insert);		
 }
 
-Cluster::~Cluster() { }
+Cluster::~Cluster() { 
+	for(std::set<Dupla*>::iterator it = this->documentos.begin(); it != this->documentos.end(); ++it) {
+		delete *it;
+	}
+}
