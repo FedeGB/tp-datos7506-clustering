@@ -3,6 +3,7 @@
 #include "Indexador.h"
 #include "minHash.h"
 #include "Document.h"
+#include "Cluster.h"
 #include "LSH.h"
 #include <iostream>
 
@@ -15,6 +16,7 @@ int main() {
 	Parser* parser;
 	minHash hashmin(7);
 	vector<vector<uint64_t>* > hashDocs;
+	vector<Document*> docs;
 	unsigned cantDocs = 0;
 	while(indexar.quedanArchivos()) {
 		doc_actual = indexar.obtenerDocumento();
@@ -24,22 +26,26 @@ int main() {
 			hashmin.doMinHash(parser->obtenerShingle(),*hashings);
 		}
 		hashDocs.push_back(hashings);
+		docs.push_back(doc_actual);
 		delete parser;
-		delete doc_actual;
+		//delete doc_actual;
 		cantDocs++;
 	}
 
 	LSH lsHashing(cantDocs,hashDocs);
 	lsHashing.doLsh();
-
+	
+	
 	for (int i = 0; i < cantDocs; i++){
 		for (int j = 0; j < cantDocs; j++){
 			cout<<"Distancia "<<i<<" "<<j<<": "<<lsHashing.distancia(i,j)<<endl;
 		}
 	}
-
+	int i = 0;
 	for (vector<vector<uint64_t>*>::iterator it = hashDocs.begin(); it != hashDocs.end(); ++it){
 		delete (*it);
+		delete docs[i];
+		i++;
 	}
 	return 0;
 }
