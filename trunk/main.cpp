@@ -17,6 +17,7 @@ int main() {
 	minHash hashmin(7);
 	vector<vector<uint64_t>* > hashDocs;
 	vector<Document*> docs;
+	Cluster* cluster;
 	unsigned cantDocs = 0;
 	while(indexar.quedanArchivos()) {
 		doc_actual = indexar.obtenerDocumento();
@@ -35,17 +36,23 @@ int main() {
 	LSH lsHashing(cantDocs,hashDocs);
 	lsHashing.doLsh();
 	
+	cluster = new Cluster(docs[0]);
+	for (int a = 1; a <cantDocs; a++) {
+		cluster->agregarDoc(docs[a], lsHashing);
+	}
 	
-	for (int i = 0; i < cantDocs; i++){
+	/*for (int i = 0; i < cantDocs; i++){
 		for (int j = 0; j < cantDocs; j++){
 			cout<<"Distancia "<<i<<" "<<j<<": "<<lsHashing.distancia(i,j)<<endl;
+			
 		}
-	}
+	}*/
 	int i = 0;
 	for (vector<vector<uint64_t>*>::iterator it = hashDocs.begin(); it != hashDocs.end(); ++it){
-		delete (*it);
 		delete docs[i];
+		delete (*it);
 		i++;
 	}
+	delete cluster;
 	return 0;
 }
