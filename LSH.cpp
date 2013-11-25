@@ -44,8 +44,8 @@ void LSH::doLsh(){
 	}
 
 	for (unsigned i = 0; i < 2*this->n; i++){
-		std::cout<<"Bucket: "<<i<<std::endl;
-		this->buckets[i].mostrar();
+		// std::cout<<"Bucket: "<<i<<std::endl;
+		// this->buckets[i].mostrar();
 	}
 
 }
