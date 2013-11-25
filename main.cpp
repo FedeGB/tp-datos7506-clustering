@@ -36,10 +36,11 @@ int main() {
 
 	LSH lsHashing(cantDocs,hashDocs);
 	lsHashing.doLsh();
-	cluster = new Cluster(docs[0]);
-	for (int a = 1; a <cantDocs; a++) {
-		cluster->agregarDoc(docs[a], lsHashing);
-	}
+	
+	vector<Cluster*> conjunto(3);
+	
+	GeneradorCluster generador;
+	generador.obtenerClusters(3, false, docs, conjunto, lsHashing);
 	
 	/*for (int i = 0; i < cantDocs; i++){
 		for (int j = 0; j < cantDocs; j++){
@@ -53,6 +54,8 @@ int main() {
 		delete (*it);
 		i++;
 	}
-	delete cluster;
+	for(vector<Cluster*>::iterator ite = conjunto.begin(); ite != conjunto.end(); ++ite) {
+		delete (*ite);
+	}
 	return 0;
 }
