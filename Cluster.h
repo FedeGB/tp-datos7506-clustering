@@ -21,7 +21,7 @@ bool ncomp(Dupla* x, Dupla* y);
 
 class Cluster {
 	private:
-		std::set<Dupla*, bool(*)(Dupla*, Dupla*)> documentos; // documentos pertenecientes al cluster ordenados por numero
+		std::set<Dupla*, bool(*)(Dupla*, Dupla*)>* documentos; // documentos pertenecientes al cluster ordenados por numero
 		double sumSim; // suma de las similaridades entre documentos
 		
 	public:
