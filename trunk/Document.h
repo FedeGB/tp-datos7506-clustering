@@ -13,7 +13,7 @@ class Document {
 		
 		Document(const std::string nombre, unsigned int numero);
 		~Document();
-		bool isCluteroid();
+		bool isClusteroid();
 		void makeClusteroid(); // pasa a ser un clusteroide
 		void notClusteroid(); // deja de ser clusteroide
 	

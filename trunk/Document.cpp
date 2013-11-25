@@ -9,7 +9,7 @@ Document::Document(const string nombre, unsigned int numero) {
 	this->clusteroide = false;
 }
 
-bool Document::isCluteroid() {
+bool Document::isClusteroid() {
 	return this->clusteroide;
 }
 
