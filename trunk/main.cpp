@@ -5,6 +5,7 @@
 #include "Document.h"
 #include "Cluster.h"
 #include "LSH.h"
+#include "GeneradorCluster.h"
 #include <iostream>
 
 using namespace std;
@@ -35,7 +36,6 @@ int main() {
 
 	LSH lsHashing(cantDocs,hashDocs);
 	lsHashing.doLsh();
-	
 	cluster = new Cluster(docs[0]);
 	for (int a = 1; a <cantDocs; a++) {
 		cluster->agregarDoc(docs[a], lsHashing);
