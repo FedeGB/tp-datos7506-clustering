@@ -4,6 +4,7 @@
 #include <set>
 #include "Document.h"
 #include "LSH.h"
+#include <vector>
 
 class Dupla {
 	public:
@@ -21,6 +22,7 @@ bool ncomp(Dupla* x, Dupla* y);
 
 class Cluster {
 	private:
+		std::set<Dupla*, bool(*)(Dupla*, Dupla*)>::iterator iterador;
 		std::set<Dupla*, bool(*)(Dupla*, Dupla*)>* documentos; // documentos pertenecientes al cluster ordenados por numero
 		double sumSim; // suma de las similaridades entre documentos
 		
@@ -29,9 +31,9 @@ class Cluster {
 		void agregarDoc(Document* doc, LSH& lsh); // Recibe la referencia del LSH para pedirle similaridades
 		double calidad();
 		Document* getClusteroide();
+		Document* obtenerDocumento();
+		bool tieneDocumentos();
 		~Cluster();
 		
 };
-
-
 #endif
