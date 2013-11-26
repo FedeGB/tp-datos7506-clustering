@@ -61,6 +61,22 @@ void Cluster::agregarDoc(Document* doc, LSH& lsh) {
 	(*(--this->documentos->end()))->documento->makeClusteroid();
 }
 
+Document* Cluster::obtenerDocumento() {
+	if (*(this->iterador) == NULL) {
+		this->iterador = this->documentos->begin();
+	} else {
+		Document* unDocumento = (*(this->iterador))->documento;
+		++this->iterador;
+		return unDocumento;
+	}
+}
+
+bool Cluster::tieneDocumentos() {
+	if (*(this->iterador) != NULL) {
+		return (this->iterador != this->documentos->end());
+	}
+}
+
 Cluster::~Cluster() { 
 	for(std::set<Dupla*>::iterator it = this->documentos->begin(); it != this->documentos->end(); ++it) {
 		delete *it;
