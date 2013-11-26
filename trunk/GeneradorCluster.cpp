@@ -63,6 +63,4 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 	}
 }
 
-void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& documentos, vector<Cluster*>& conjuntoClusters, LSH& lsh) {
-	
-}
+void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& documentos, vector<Cluster*>& conjuntoClusters, LSH& lsh) {}
