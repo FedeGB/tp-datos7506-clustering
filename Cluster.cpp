@@ -25,7 +25,6 @@ Cluster::Cluster(Document* lider) {
 	this->documentos->insert(dupla);
 	lider->makeClusteroid();
 	this->sumSim = 0;
-	this->iterador = this->documentos->begin();
 }
 
 double Cluster::calidad() {
@@ -62,20 +61,19 @@ void Cluster::agregarDoc(Document* doc, LSH& lsh) {
 	(*(--this->documentos->end()))->documento->makeClusteroid();
 }
 
-Document* Cluster::obtenerDocumento() {
-	if (*(this->iterador) == NULL) {
+void Cluster::iniciarDocumentos() {
+	if(this->iterador != this->documentos->begin())
 		this->iterador = this->documentos->begin();
-	} else {
-		Document* unDocumento = (*(this->iterador))->documento;
-		++this->iterador;
-		return unDocumento;
-	}
+}
+
+Document* Cluster::obtenerDocumento() {
+	Document* unDocumento = (*(this->iterador))->documento;
+	++this->iterador;
+	return unDocumento;
 }
 
 bool Cluster::tieneDocumentos() {
-	if (*(this->iterador) != NULL) {
-		return (this->iterador != this->documentos->end());
-	}
+	return (this->iterador != this->documentos->end());
 }
 
 Cluster::~Cluster() { 

@@ -41,7 +41,7 @@ int main() {
 	vector<Cluster*> conjunto(3);
 	
 	GeneradorCluster generador;
-	generador.obtenerClusters(3, false, docs, conjunto, lsHashing);
+	generador.obtenerClusters(3, true, docs, conjunto, lsHashing);
 	
 	/*for (int i = 0; i < cantDocs; i++){
 		for (int j = 0; j < cantDocs; j++){
