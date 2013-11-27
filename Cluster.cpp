@@ -25,6 +25,7 @@ Cluster::Cluster(Document* lider) {
 	this->documentos->insert(dupla);
 	lider->makeClusteroid();
 	this->sumSim = 0;
+	this->iterador = this->documentos->begin();
 }
 
 double Cluster::calidad() {

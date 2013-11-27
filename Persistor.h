@@ -4,7 +4,6 @@
 #include "minHash.h"
 #include "Codigos.h"
 #include "Cluster.h"
-#include <fstream>
 #include <vector>
 
 class Persistor {

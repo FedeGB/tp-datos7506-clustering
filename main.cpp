@@ -6,6 +6,7 @@
 #include "Cluster.h"
 #include "LSH.h"
 #include "GeneradorCluster.h"
+#include "Persistor.h"
 #include <iostream>
 
 using namespace std;
@@ -48,6 +49,8 @@ int main() {
 			
 		}
 	}*/
+	Persistor persistor;
+	persistor.saveClusters(hashDocs,conjunto);
 	int i = 0;
 	for (vector<vector<uint64_t>*>::iterator it = hashDocs.begin(); it != hashDocs.end(); ++it){
 		delete docs[i];
