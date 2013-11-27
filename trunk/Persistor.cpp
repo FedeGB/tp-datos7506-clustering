@@ -28,6 +28,7 @@ void Persistor::saveClusters(const std::vector<std::vector<uint64_t>* >& hashDoc
 			fClusteroids << (*hashes);//write no me dejaba guardar otra cosa que no sea char (!)
 		}
 		//Guardo los nombres de los documentos que pertenecen a un cluster
+		(*it)->iniciarDocumentos();
 		while ((*it)->tieneDocumentos()) {
 			std::string nombre = (*it)->obtenerDocumento()->name; 
 			//fCluster.write(nombre.c_str(), sizeof(nombre)); esta linea hace que se guarde cualquier cosa

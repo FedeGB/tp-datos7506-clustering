@@ -31,6 +31,7 @@ class Cluster {
 		void agregarDoc(Document* doc, LSH& lsh); // Recibe la referencia del LSH para pedirle similaridades
 		double calidad();
 		Document* getClusteroide();
+		void iniciarDocumentos();
 		Document* obtenerDocumento();
 		bool tieneDocumentos();
 		~Cluster();

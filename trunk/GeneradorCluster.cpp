@@ -25,7 +25,9 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 		conjuntoClusters[l] = actual;
 	}
 	unsigned i = 0;
+	unsigned aux;
 	unsigned num_clusteroide, num_actual, seleccion;
+	seleccion = 0;
 	vector<unsigned> selecciones;
 	double dist_actual, dist_menor, dif;
 	while(i < documentos.size()) {
@@ -35,8 +37,8 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 		}
 		selecciones.clear();
 		num_actual = (documentos.at(i))->number;
-		l = 0;
-		dist_menor = 1;
+		l = 0; // Posicion conjuntoClusters
+		dist_menor = 1.2;
 		// Seleccion cluster/s a donde agregar el documento
 		while(l < k) {
 			num_clusteroide = ((conjuntoClusters.at(l))->getClusteroide())->number;
@@ -44,6 +46,16 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 			if(dist_actual < dist_menor) {
 				dist_menor = dist_actual;
 				seleccion = l;
+				// Al for no entra en caso de no haber multiples pues selecciones siempre tendria 0 elementos
+				for(unsigned t = 0; t < selecciones.size(); ++t) {
+					dist_actual = lsh.distancia(num_actual, ((conjuntoClusters.at(selecciones[t]))->getClusteroide())->number);
+					dif = dist_actual - dist_menor;
+					if(dif > DIFDIST) {
+						aux = selecciones[selecciones.size()-1];
+						selecciones[t] = aux;
+						selecciones.pop_back();
+					}
+				}
 			}
 			else if(multiple) {
 				dif = dist_actual - dist_menor;
@@ -56,6 +68,7 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 		(conjuntoClusters.at(seleccion))->agregarDoc(documentos.at(i), lsh);
 		if(multiple) {
 			for(unsigned s = 0; s < selecciones.size(); ++s) {
+				std::cout << "SELECCION: " << selecciones[s] << std::endl;
 				(conjuntoClusters.at(selecciones[s]))->agregarDoc(documentos.at(i), lsh);
 			}
 		}
