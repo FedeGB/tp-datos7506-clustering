@@ -9,7 +9,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
-#define MAX 100
+#define MAX 121
 
 #include <iostream>
 
@@ -31,7 +31,7 @@ CDelta::CDelta(uint64_t numero) {
   /*for (int i = 0; i < bytes; i++ ) {
     std::cout << (int)codigo[i] << std::endl;
   }*/
-  //std::cout << "CDelta::CDelta(" << numero << ") tiene largo = " << bits << std::endl;
+  std::cout << "CDelta::CDelta(" << numero << ") tiene largo = " << bits << std::endl;
 }
 
 CDelta::~CDelta() {
