@@ -25,10 +25,7 @@ void Persistor::saveClusters(const std::vector<std::vector<uint64_t>* >& hashDoc
 		unsigned int nroClusteroide = ((*it)->getClusteroide())->number;
 		std::vector<uint64_t>* hashClusteroide = hashDocs[nroClusteroide];
 		for (std::vector<uint64_t>::iterator hashes = hashClusteroide->begin(); hashes != hashClusteroide->end(); ++hashes){
-			CDelta codificador(*hashes);
-			uchar* codigoAGuardar = codificador.codigo; 
-			fClusteroids << codigoAGuardar;//write no me dejaba guardar otra cosa que no sea char (!)
-			//fClusteroids.write(codigoAGuardar, sizeof(codigoAGuardar));
+			fClusteroids << (*hashes);//write no me dejaba guardar otra cosa que no sea char (!)
 		}
 		//Guardo los nombres de los documentos que pertenecen a un cluster
 		while ((*it)->tieneDocumentos()) {
