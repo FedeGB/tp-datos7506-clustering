@@ -2,7 +2,6 @@
 #define __PERSISTOR_H__
 
 #include "minHash.h"
-#include "Codigos.h"
 #include "Cluster.h"
 #include <vector>
 
