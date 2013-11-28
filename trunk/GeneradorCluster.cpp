@@ -1,8 +1,9 @@
 #include "GeneradorCluster.h"
 #include <iostream>
+#include <cmath>
 
 #define DIFDIST 0.1 // Parametro para diferencia de distancias entre documentos
-#define DIFCAL 0.1 // Parametro para diferencia de calidad de clusters
+#define DIFCAL 0.9 // Parametro para diferencia de calidad de clusters
 
 using std::vector;
 
@@ -11,7 +12,13 @@ GeneradorCluster::GeneradorCluster() { }
 GeneradorCluster::~GeneradorCluster() { }
 
 double GeneradorCluster::calidad(std::vector<Cluster*>& conjuntoClusters) {
-	
+	vector<Cluster*>::iterator it = conjuntoClusters.begin();
+	double calidad = 0;
+	while(it != conjuntoClusters.end()) {
+		calidad += (*it)->calidad();
+		++it;
+	}
+	return calidad/conjuntoClusters.size();
 }
 
 void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Document*>& documentos, vector<Cluster*>& conjuntoClusters, LSH& lsh) {
@@ -22,7 +29,7 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 	// Creamos los k Clusters con sus respectivos lideres
 	for(l = 0; l < k; ++l) {
 		actual = new Cluster(documentos.at(lideres[l]));
-		conjuntoClusters[l] = actual;
+		conjuntoClusters.push_back(actual);
 	}
 	unsigned i = 0;
 	unsigned aux;
@@ -68,7 +75,6 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 		(conjuntoClusters.at(seleccion))->agregarDoc(documentos.at(i), lsh);
 		if(multiple) {
 			for(unsigned s = 0; s < selecciones.size(); ++s) {
-				std::cout << "SELECCION: " << selecciones[s] << std::endl;
 				(conjuntoClusters.at(selecciones[s]))->agregarDoc(documentos.at(i), lsh);
 			}
 		}
@@ -76,4 +82,38 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 	}
 }
 
-void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& documentos, vector<Cluster*>& conjuntoClusters, LSH& lsh) {}
+void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& documentos, vector<Cluster*>& conjuntoClusters, LSH& lsh) {
+	unsigned posIni = (unsigned)floor(sqrt((double)N));
+	vector<Cluster*> conjuntoAux;
+	double calidadAct, calidadSig, calidadAnt, difpre, difpost;
+		
+	while(posIni > 0) {
+		std::cout << "POS INI: " << posIni << std::endl;
+		this->obtenerClusters(posIni, multiple, documentos, conjuntoClusters, lsh);
+		this->obtenerClusters(posIni+1, multiple, documentos, conjuntoAux, lsh);
+		calidadSig = this->calidad(conjuntoAux);
+		for(vector<Cluster*>::iterator ite = conjuntoAux.begin(); ite != conjuntoAux.end(); ++ite) {
+			delete (*ite);
+		}
+		conjuntoAux.clear();
+		this->obtenerClusters(posIni-1, multiple, documentos, conjuntoAux, lsh);
+		calidadAnt = this->calidad(conjuntoAux);
+		calidadAct = this->calidad(conjuntoClusters);
+		difpre = calidadAct - calidadAnt;
+		difpost = calidadSig - calidadAct;
+		std::cout << "DIFCAL: " << difpre/difpost << std::endl;
+		if(difpre/difpost < DIFCAL) {
+			posIni = (unsigned)floor(sqrt((double)(N-posIni))) + posIni;
+		}
+		else {
+			for(vector<Cluster*>::iterator ite = conjuntoAux.begin(); ite != conjuntoAux.end(); ++ite) {
+				delete (*ite);
+			}
+			break;
+		}
+		for(vector<Cluster*>::iterator ite = conjuntoAux.begin(); ite != conjuntoAux.end(); ++ite) {
+			delete (*ite);
+		}
+		conjuntoAux.clear();
+	}	
+}
