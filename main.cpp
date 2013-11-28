@@ -18,6 +18,7 @@ int main() {
 	Parser* parser;
 	minHash hashmin(7);
 	vector<vector<uint64_t>* > hashDocs;
+	vector<vector<uint64_t>* > hashDocs2;
 	vector<Document*> docs;
 	Cluster* cluster;
 	unsigned cantDocs = 0;
@@ -34,6 +35,7 @@ int main() {
 		//delete doc_actual;
 		cantDocs++;
 	}
+
 	LSH lsHashing(cantDocs,hashDocs);
 	lsHashing.doLsh();
 	
@@ -42,15 +44,27 @@ int main() {
 	GeneradorCluster generador;
 	//generador.obtenerClusters(3, true, docs, conjunto, lsHashing);
 	generador.KMeans(cantDocs, false, docs, conjunto, lsHashing);
-	/*for (int i = 0; i < cantDocs; i++){
+	for (int i = 0; i < cantDocs; i++){
 		for (int j = 0; j < cantDocs; j++){
 			cout<<"Distancia "<<i<<" "<<j<<": "<<lsHashing.distancia(i,j)<<endl;
 			
 		}
-	}*/
+	}
 
 	Persistor persistor;
 	persistor.saveClusters(hashDocs,conjunto);
+	Persistor otroPersistor;
+	otroPersistor.cargarClusteroides(hashDocs2);
+	/*for (vector<vector<uint64_t>* >::iterator it1 = hashDocs2.begin(); it1 != hashDocs2.end(); ++it1){
+		for (vector<uint64_t>::iterator it2 = (*it1)->begin(); it2 != (*it1)->end(); ++it2){
+			std::cout << *it2 << std::endl;
+		}
+	}*/
+
+
+	for (vector<vector<uint64_t>*>::iterator it = hashDocs2.begin(); it != hashDocs2.end(); ++it){
+		delete (*it);
+	}
 	int i = 0;
 	for (vector<vector<uint64_t>*>::iterator it = hashDocs.begin(); it != hashDocs.end(); ++it){
 		delete docs[i];
