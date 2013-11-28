@@ -38,11 +38,11 @@ int main() {
 	LSH lsHashing(cantDocs,hashDocs);
 	lsHashing.doLsh();
 	
-	vector<Cluster*> conjunto(3);
+	vector<Cluster*> conjunto;
 	
 	GeneradorCluster generador;
-	generador.obtenerClusters(3, true, docs, conjunto, lsHashing);
-	
+	//generador.obtenerClusters(3, true, docs, conjunto, lsHashing);
+	generador.KMeans(cantDocs, false, docs, conjunto, lsHashing);
 	/*for (int i = 0; i < cantDocs; i++){
 		for (int j = 0; j < cantDocs; j++){
 			cout<<"Distancia "<<i<<" "<<j<<": "<<lsHashing.distancia(i,j)<<endl;
