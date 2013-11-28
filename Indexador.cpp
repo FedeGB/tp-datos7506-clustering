@@ -7,7 +7,7 @@ using std::string;
 // Constructor del indexador
 Indexador::Indexador(const string dirPath) {
 	this->contador = 0;
-	this->Path = dirPath;
+	this->Path = dirPath + "/";
 	this->directorio = opendir(dirPath.c_str());
 }
 
