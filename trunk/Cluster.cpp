@@ -77,8 +77,9 @@ Document* Cluster::obtenerDocumento() {
 	return unDocumento;
 }
 
+// Deja el clusteroide fuera de la iteracion
 bool Cluster::tieneDocumentos() {
-	return (this->iterador != this->documentos->end());
+	return (this->iterador != (--this->documentos->end()));
 }
 
 Cluster::~Cluster() { 
