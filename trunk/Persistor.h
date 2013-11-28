@@ -14,7 +14,7 @@ public:
 
 	void saveClusters(const std::vector<std::vector<uint64_t>* >& hashDocs, const std::vector<Cluster*>& clusters);
 
-
+	void cargarClusteroides(std::vector<std::vector<uint64_t>* >& hashDocs);
 
 };
 #endif // __PERSISTOR_H__
