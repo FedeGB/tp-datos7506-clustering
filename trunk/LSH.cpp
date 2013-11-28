@@ -42,11 +42,10 @@ void LSH::doLsh(){
 			numDoc++;
 		}
 	}
-
-	for (unsigned i = 0; i < 2*this->n; i++){
-		// std::cout<<"Bucket: "<<i<<std::endl;
-		// this->buckets[i].mostrar();
-	}
+	// for (unsigned i = 0; i < 2*this->n; i++){
+	// 	std::cout<<"Bucket: "<<i<<std::endl;
+	// 	this->buckets[i].mostrar();
+	// }
 
 }
 
@@ -68,9 +67,11 @@ double LSH::distancia(unsigned doc1,unsigned doc2){
 		if (*itDoc1 == *itDoc2){
 			cantIguales++;
 		}
+		itDoc1++;
+		itDoc2++;
 	}
-	similitud = cantIguales/(BANDAS*FILAS);
-	return 1-similitud;
+	similitud = (double)cantIguales/(double)(BANDAS*FILAS);
+	return 1.0-similitud;
 }
 
 LSH::~LSH(){

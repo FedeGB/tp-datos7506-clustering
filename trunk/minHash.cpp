@@ -16,17 +16,18 @@ minHash::~minHash(){}
 void minHash::doMinHash(const string& shingle, vector<uint64_t>& vHash){
 	uint64_t numFila = this->calcFila(shingle);
 	for (unsigned i = 0; i < MAXHASH; i++){
-		vHash[i] = (this->hashing.hashear(numFila,i));
+		uint64_t hashResult = this->hashing.hashear(numFila,i);
+		if (hashResult < vHash[i]){
+			vHash[i] = hashResult;
+		}
 	}
 }
 
 unsigned char minHash::card(const char caracter){
 	if (caracter >= 97){
 		return (caracter % 97) + 1;
-	} else if (caracter >= 48){
-		return 28 + (caracter % 48);
 	} else {
-		return 27;
+		return 27; //espacio
 	}
 }
 
@@ -35,7 +36,7 @@ uint64_t minHash::calcFila(const string& shingle){
 	char potencia = this->sizeShingle;
 	char i = 1;
 	for (string::const_iterator it= shingle.begin(); it!=shingle.end(); it++){
-		sum += (this->card(*it) - 1)*pow(37,potencia-i);
+		sum += (this->card(*it) - 1)*pow(27,potencia-i);
 		i++;
 	}
 	sum+= 1;

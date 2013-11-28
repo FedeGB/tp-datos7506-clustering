@@ -24,7 +24,7 @@ int main() {
 	while(indexar.quedanArchivos()) {
 		doc_actual = indexar.obtenerDocumento();
 		parser = new Parser(indexar.Path+doc_actual->name,7);
-		vector<uint64_t>* hashings = new vector<uint64_t>(240);
+		vector<uint64_t>* hashings = new vector<uint64_t>(240,18446744073709551615U);
 		while (parser->tieneShingle()) {
 			hashmin.doMinHash(parser->obtenerShingle(),*hashings);
 		}
@@ -43,12 +43,13 @@ int main() {
 	GeneradorCluster generador;
 	//generador.obtenerClusters(3, true, docs, conjunto, lsHashing);
 	generador.KMeans(cantDocs, false, docs, conjunto, lsHashing);
-	/*for (int i = 0; i < cantDocs; i++){
+	for (int i = 0; i < cantDocs; i++){
 		for (int j = 0; j < cantDocs; j++){
 			cout<<"Distancia "<<i<<" "<<j<<": "<<lsHashing.distancia(i,j)<<endl;
 			
 		}
-	}*/
+	}
+
 	Persistor persistor;
 	persistor.saveClusters(hashDocs,conjunto);
 	int i = 0;
