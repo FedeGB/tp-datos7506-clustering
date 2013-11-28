@@ -153,11 +153,7 @@ void Parser::quitarStopword(const string& stpWord, string& line) {
 // o una letra minuscula
 // Post: devuelve true en caso de serlo
 bool Parser::esAlfaNum(int number) {
-	if( !( ( (96 < number) && (number < 123) )
-			|| ( (47 < number) && (number < 58) ) ) ) {
-		return false;
-	}
-	return true;
+	return (96 < number) && (number < 123);
 }
 
 // Quita los caracteres que no sean letras o numeros de la linea
