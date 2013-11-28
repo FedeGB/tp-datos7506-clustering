@@ -25,6 +25,7 @@ class Cluster {
 		std::set<Dupla*, bool(*)(Dupla*, Dupla*)>::iterator iterador;
 		std::set<Dupla*, bool(*)(Dupla*, Dupla*)>* documentos; // documentos pertenecientes al cluster ordenados por numero
 		double sumSim; // suma de las similaridades entre documentos
+		Dupla* clusteroide;
 		
 	public:
 		Cluster(Document* lider);

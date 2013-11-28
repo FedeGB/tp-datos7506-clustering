@@ -3,7 +3,7 @@
 #include <cmath>
 
 #define DIFDIST 0.1 // Parametro para diferencia de distancias entre documentos
-#define DIFCAL 0.9 // Parametro para diferencia de calidad de clusters
+#define DIFCAL 0.1 // Parametro para diferencia de calidad de clusters
 
 using std::vector;
 
@@ -15,6 +15,7 @@ double GeneradorCluster::calidad(std::vector<Cluster*>& conjuntoClusters) {
 	vector<Cluster*>::iterator it = conjuntoClusters.begin();
 	double calidad = 0;
 	while(it != conjuntoClusters.end()) {
+		//std::cout << "Calidad clus= " << (*it)->calidad() << std::endl;
 		calidad += (*it)->calidad();
 		++it;
 	}
@@ -72,6 +73,7 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 			++l;
 		}
 		// Agrego documento a cluster/s
+		//std::cout << "AGREGO DOC: " << documentos.at(i)->number << std::endl;
 		(conjuntoClusters.at(seleccion))->agregarDoc(documentos.at(i), lsh);
 		if(multiple) {
 			for(unsigned s = 0; s < selecciones.size(); ++s) {
@@ -88,21 +90,28 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 	double calidadAct, calidadSig, calidadAnt, difpre, difpost;
 		
 	while(posIni > 0) {
-		std::cout << "POS INI: " << posIni << std::endl;
+		//std::cout << "POS INI: " << posIni << std::endl;
+		//std::cout << "k" << std::endl;
 		this->obtenerClusters(posIni, multiple, documentos, conjuntoClusters, lsh);
+		//std::cout << "k+1" << std::endl;
 		this->obtenerClusters(posIni+1, multiple, documentos, conjuntoAux, lsh);
 		calidadSig = this->calidad(conjuntoAux);
 		for(vector<Cluster*>::iterator ite = conjuntoAux.begin(); ite != conjuntoAux.end(); ++ite) {
 			delete (*ite);
 		}
 		conjuntoAux.clear();
+		//std::cout << "k-1" << std::endl;
 		this->obtenerClusters(posIni-1, multiple, documentos, conjuntoAux, lsh);
 		calidadAnt = this->calidad(conjuntoAux);
 		calidadAct = this->calidad(conjuntoClusters);
+		//std::cout << "CALSIG: " << calidadSig << std::endl;
+		//std::cout << "CALANT: " << calidadAnt << std::endl;
 		difpre = calidadAct - calidadAnt;
 		difpost = calidadSig - calidadAct;
-		std::cout << "DIFCAL: " << difpre/difpost << std::endl;
-		if(difpre/difpost < DIFCAL) {
+		//std::cout << "DIFPRE: " << difpre << std::endl;
+		//std::cout << "DIFPOST: " << difpost << std::endl;
+		//std::cout << "DIFCAL: " << difpost - difpre << std::endl;
+		if(difpost - difpre > DIFCAL) { // Este tema hay que ver bien los valores y demas...
 			posIni = (unsigned)floor(sqrt((double)(N-posIni))) + posIni;
 		}
 		else {
@@ -114,6 +123,10 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 		for(vector<Cluster*>::iterator ite = conjuntoAux.begin(); ite != conjuntoAux.end(); ++ite) {
 			delete (*ite);
 		}
+		for(vector<Cluster*>::iterator ite = conjuntoClusters.begin(); ite != conjuntoClusters.end(); ++ite) {
+				delete (*ite);
+		}
 		conjuntoAux.clear();
+		conjuntoClusters.clear();
 	}	
 }
