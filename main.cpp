@@ -66,10 +66,10 @@ int main(int argc, char** argv) {
 				return 0;
 			
 			case 'o':
-				if(strcmp(optarg, "Y") == 0) {
+				if(strcmp(argv[optind], "Y") == 0) {
 					multiple = true;
 				}
-				if(strcmp(optarg, "N") == 0) {
+				if(strcmp(argv[optind], "N") == 0) {
 					multiple = false;
 				}
 				else {
