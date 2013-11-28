@@ -128,5 +128,5 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 		}
 		conjuntoAux.clear();
 		conjuntoClusters.clear();
-	}	
+	}
 }

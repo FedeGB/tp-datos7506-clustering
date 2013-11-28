@@ -24,10 +24,11 @@ int main(int argc, char** argv) {
 		return ARGERROR;
 	}
 	
-	int opt, dflag, oflag, k;
-	dflag = oflag = k = 0;
-	std::string path;
+	int opt, dflag, oflag, aflag, gflag, lflag, k;
+	aflag = gflag = lflag = dflag = oflag = k = 0;
 	bool multiple = false;
+	std::string path(" ");
+	Document* doc_actual = NULL;
 	
 	while( (opt = getopt(argc, argv, "a:c::d:glo:")) != -1 ) {
 		
@@ -37,8 +38,10 @@ int main(int argc, char** argv) {
 					fprintf(stderr, "Hay parametros de más\n");
 					return ARGERROR;
 				}
+				aflag = 1;
+				path = std::string(optarg);
 				
-				return 0;
+				break;
 			
 			case 'c':
 				k = (unsigned)atoi(argv[optind]);
@@ -54,8 +57,9 @@ int main(int argc, char** argv) {
 					fprintf(stderr, "Hay parametros de más\n");
 					return ARGERROR;
 				}
+				gflag = 1;
 				
-				return 0;
+				break;
 			
 			case 'l':
 				if(argc > 2) {
@@ -63,13 +67,15 @@ int main(int argc, char** argv) {
 					return ARGERROR;
 				}
 				
-				return 0;
+				lflag = 1;
+				
+				break;
 			
 			case 'o':
-				if(strcmp(argv[optind], "Y") == 0) {
+				if(strcmp(optarg, "Y") == 0) {
 					multiple = true;
 				}
-				if(strcmp(argv[optind], "N") == 0) {
+				if(strcmp(optarg, "N") == 0) {
 					multiple = false;
 				}
 				else {
@@ -99,15 +105,54 @@ int main(int argc, char** argv) {
 		}
 	}
 	
-	// Llegamos aca si es un repositorio nuevo y hacemos el cluster de 0
-	// En los demas casos se resuelve dentro del case correspondiente
+	
+	if(gflag) {
+		path = std::string("saves/clusters");
+		Indexador indexar(path);
+		char nombreDoc[100];
+		doc_actual = NULL;
+		while(indexar.quedanArchivos()) {
+			doc_actual = indexar.obtenerDocumento();
+			if(doc_actual->name == ".svn") {
+				delete doc_actual;
+				continue;
+			}
+			path.clear();
+			path = std::string("saves/clusters/");
+			path += doc_actual->name;
+			std::ifstream clus(path, std::ios::in);
+			memset(nombreDoc, ' ', 100);
+			clus >> nombreDoc;
+			cout << "Categoria: " << nombreDoc << endl;
+			cout << nombreDoc << endl;
+			clus >> nombreDoc;
+			while(!clus.eof()) {
+				cout << nombreDoc << endl;
+				memset(nombreDoc, ' ', 100);
+				clus >> nombreDoc;
+				
+			}
+			clus.close();
+			delete doc_actual;
+		}
+				
+		return 0;
+	}
+	if(lflag) {
+		return 0;
+	}
+	if(aflag) {
+		return 0;
+	}
+	
+	
+	
 	if(!dflag && !oflag) {
 		fprintf(stderr, "Falto algun parametro\n");
 		return ARGERROR;
 	}
 	
 	Indexador indexar(path);
-	Document* doc_actual;
 	Parser* parser;
 	minHash hashmin(7);
 	vector<vector<uint64_t>* > hashDocs;

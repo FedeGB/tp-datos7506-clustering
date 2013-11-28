@@ -30,10 +30,12 @@ void Persistor::saveClusters(const std::vector<std::vector<uint64_t>* >& hashDoc
 			fClusteroids.write((char*)&(*hashes),8);
 		}
 		//Guardo los nombres de los documentos que pertenecen a un cluster
+		std::string name = (*it)->getClusteroide()->name;
+		fCluster << name.c_str() << std::endl;
 		(*it)->iniciarDocumentos();
 		while ((*it)->tieneDocumentos()) {
-			std::string nombre = (*it)->obtenerDocumento()->name; 
-			fCluster << nombre.c_str() << std::endl;
+			name = (*it)->obtenerDocumento()->name; 
+			fCluster << name.c_str() << std::endl;
 		}
 		fCluster.close();
 	}	
