@@ -15,7 +15,7 @@ bool ncomp(DuplaDoc* x, DuplaDoc* y) {
 	return x->nameDoc < y->nameDoc;
 }
 
-DuplaDoc::DuplaDoc(string nameDod) {
+DuplaDoc::DuplaDoc(string nameDoc) {
 	this->nameDoc = nameDoc;
 	this->numbersClusters = new vector<unsigned int>;
 }
@@ -27,10 +27,11 @@ Listador::Listador() {}
 Listador::~Listador() {}
 
 void Listador::listarPorDocumentos() {
-	set<DuplaDoc*, bool(*)(DuplaDoc*, DuplaDoc*)> documentsToList;
+	bool(*fncompt)(DuplaDoc*, DuplaDoc*) = ncomp;
+	set<DuplaDoc*, bool(*)(DuplaDoc*, DuplaDoc*)> documentsToList(fncompt);
 	Document* doc_actual = NULL;
 	char nombreDoc[100];
-	string path = string("saves/clusters");
+	string path("saves/clusters");
 	Indexador indexar(path);
 	unsigned int contadorCluster = 1;
 	DuplaDoc* dupla_insert = NULL;
@@ -41,15 +42,21 @@ void Listador::listarPorDocumentos() {
 		path = string("saves/clusters/");
 		path += doc_actual->name;
 		std::ifstream cluster(path, std::ios::in);
+		memset(nombreDoc, ' ', 100);
+		cluster.getline(nombreDoc, 100);
 		while (!cluster.eof()) {
-			memset(nombreDoc, ' ', 100);
-			cluster >> nombreDoc;
-			dupla_insert = new DuplaDoc(string(nombreDoc));  
+			dupla_insert = new DuplaDoc(nombreDoc);
 			status = documentsToList.insert(dupla_insert);
 			if (!status.second) {
-				set<DuplaDoc*, bool (*)(DuplaDoc*, DuplaDoc*)>::iterator dupla_modificar = documentsToList.find(dupla_insert);
-				(*dupla_modificar)->numbersClusters->push_back(contadorCluster);
+				(*(status.first))->numbersClusters->push_back(contadorCluster);
+				delete dupla_insert->numbersClusters;
+				delete dupla_insert;
 			}
+			else {
+				dupla_insert->numbersClusters->push_back(contadorCluster);
+			}
+			memset(nombreDoc, ' ', 100);
+			cluster.getline(nombreDoc, 100);
 		}
 		cluster.close();
 		contadorCluster++;
@@ -59,9 +66,10 @@ void Listador::listarPorDocumentos() {
 		std::cout << "El documento " << (*it)->nameDoc << " esta en el/los cluster/s: " << std::endl;
 		for(vector<unsigned int>::iterator numCluster = (*it)->numbersClusters->begin(); numCluster != (*it)->numbersClusters->end(); ++numCluster) {
 			std::cout << (*numCluster) << std::endl; 
-		} 
+		}
 	}
 	for(set<DuplaDoc*>::iterator it = documentsToList.begin(); it != documentsToList.end(); ++it) {
+		((*it)->numbersClusters)->clear();
 		delete ((*it)->numbersClusters);
 		delete (*it);
 	}
@@ -86,14 +94,14 @@ void Listador::listarPorCluster() {
 		path += doc_actual->name;
 		std::ifstream clus(path, std::ios::in);
 		memset(nombreDoc, ' ', 100);
-		clus >> nombreDoc;
+		clus.getline(nombreDoc, 100);
 		std::cout << "Categoria: " << nombreDoc << std::endl;
 		std::cout << nombreDoc << std::endl;
-		clus >> nombreDoc;
+		clus.getline(nombreDoc, 100);
 		while(!clus.eof()) {
 			std::cout << nombreDoc << std::endl;
 			memset(nombreDoc, ' ', 100);
-			clus >> nombreDoc;
+			clus.getline(nombreDoc, 100);
 			
 		}
 		clus.close();
