@@ -165,7 +165,7 @@ int main(int argc, char** argv) {
 		doc_actual = indexar.obtenerDocumento();
 		cout << "Indexando: " << doc_actual->name << endl;
 		parser = new Parser(indexar.Path+doc_actual->name,7);
-		vector<uint64_t>* hashings = new vector<uint64_t>(240);
+		vector<uint64_t>* hashings = new vector<uint64_t>(240,18446744073709551615U);
 		while (parser->tieneShingle()) {
 			hashmin.doMinHash(parser->obtenerShingle(),*hashings);
 		}
@@ -175,22 +175,28 @@ int main(int argc, char** argv) {
 		cantDocs++;
 	}
 
+	cout << "Construyendo LSH..." << endl;
 	LSH lsHashing(cantDocs,hashDocs);
 	lsHashing.doLsh();
 	
+	cout << "Generando clusters..." << endl;
 	vector<Cluster*> conjunto;
 	GeneradorCluster generador;
 	
 	if(k != 0 ) {
+		cout << "Usted ha decidido generar "<<k<<" clusters..."<< endl;
 		generador.obtenerClusters(k, multiple, docs, conjunto, lsHashing);
 	}
 	else {
+		cout << "Realizando K-Means..." << endl;
 		generador.KMeans(cantDocs, multiple, docs, conjunto, lsHashing);
 	}
 
+	cout << "Persistiendo clusters..." << endl;
 	Persistor persistor;
 	persistor.saveClusters(hashDocs,conjunto);
-	
+
+	cout << "Finalizando..." << endl;	
 	// Liberamos memoria
 	int i = 0;
 	for (vector<vector<uint64_t>*>::iterator it = hashDocs.begin(); it != hashDocs.end(); ++it){
