@@ -42,3 +42,29 @@ uint64_t minHash::calcFila(const string& shingle){
 	sum+= 1;
 	return sum;
 }
+
+unsigned minHash::masCercano(vector<vector<uint64_t>*>& vHashMin, vector<uint64_t>& vHashNew) {
+	unsigned seleccion = 0;
+	unsigned char iguales = 0;
+	unsigned char max_sim = 0;
+	vector<uint64_t>::iterator itNew;
+	vector<uint64_t>::iterator itOlds;
+	for(int doc = 0; doc < vHashMin.size(); ++doc) {
+		itNew = vHashNew.begin();
+		itOlds = vHashMin[doc]->begin();
+		while(itNew != vHashNew.end()) {
+			if(*itOlds == *itNew) {
+				iguales++;
+			}
+			itOlds++;
+			itNew++;
+		}
+		if(iguales > max_sim) {
+			seleccion = doc;
+			max_sim = iguales;
+		}
+		iguales = 0;
+	}
+	
+	return seleccion;
+}

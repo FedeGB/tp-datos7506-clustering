@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string.h>
 #include <string>
+#include <cmath>
 #include <unistd.h>
 // http://www.gnu.org/software/libc/manual/html_node/Getopt.html unistd.h 'man'
 
@@ -75,7 +76,7 @@ int main(int argc, char** argv) {
 				if(strcmp(optarg, "Y") == 0) {
 					multiple = true;
 				}
-				if(strcmp(optarg, "N") == 0) {
+				else if(strcmp(optarg, "N") == 0) {
 					multiple = false;
 				}
 				else {
@@ -167,7 +168,7 @@ int main(int argc, char** argv) {
 		parser = new Parser(indexar.Path+doc_actual->name,7);
 		vector<uint64_t>* hashings = new vector<uint64_t>(240,18446744073709551615U);
 		while (parser->tieneShingle()) {
-			hashmin.doMinHash(parser->obtenerShingle(),*hashings);
+			hashmin.doMinHash(parser->obtenerShingle(), *hashings);
 		}
 		hashDocs.push_back(hashings);
 		docs.push_back(doc_actual);
