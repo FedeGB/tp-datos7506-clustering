@@ -2,6 +2,7 @@
 #include <cctype>
 #include <sstream>
 #include <iterator>
+#include <iostream>
 
 
 using namespace std;
@@ -74,11 +75,19 @@ bool Parser::eofDocument() {
 }
 
 //Convierte palabra a minúscula
-void Parser::toLowerCase(string& palabra) {
-	int i=0;
-	for(string::iterator it = palabra.begin(); it!=palabra.end(); ++it) {
-    	palabra.at(i) = tolower(palabra.at(i));
-		i++;
+void Parser::transform(string& palabra) {
+	int i = 0;
+	char actual;
+	int bytes;
+	for(i; i < palabra.size(); ++i) {
+		actual = palabra.at(i);
+		bytes = this->codeUTF8(actual);
+		if(bytes == 1) {
+			palabra.at(i) = tolower(palabra.at(i));
+		}
+		else {
+			palabra.erase(i, i+bytes-1);
+		}
    	}
 }
 
@@ -133,20 +142,54 @@ void Parser::quitarStopword(const string& stpWord, string& line) {
 		while(stpWord[idx] == actual[i]) {
 			idx++;
 			i++;
+			if(i == actual.size()) {
+				break;
+			}
 		}
-		if(esAlfaNum((int)actual[i])) { // Si es una letra o numero, no es stpWord
-			posIni += idx;
-			actual = actual.substr(i);
-			i = actual.find(stpWord);
-			posIni += i ;
-			continue;
-		} else { // Si paso todo, es nuestra stpWord
+		if(i != actual.size()) {
+			if(esAlfaNum((int)actual[i])) { // Si es una letra o numero, no es stpWord
+				posIni += idx;
+				actual = actual.substr(i);
+				i = actual.find(stpWord);
+				posIni += i ;
+				continue;
+			}
+			else {
+				break;
+			}
+		}
+		else { // Si paso todo, es nuestra stpWord
 			break;
 		}
 	}
 	if (posIni != line.npos) {
 		line.erase(posIni,stpWord.length()+1);
 	}
+}
+
+// Indica cuantos bytes usa el caracter segun la codificacion UTF8
+// Devuelve -1 en algun caso erroneo (cuando se pasaria del uso de 6 bytes)
+int Parser::codeUTF8(char caracter) {
+	unsigned char idx = 0x80;
+	unsigned char aux = (unsigned char)caracter;
+	int count = 1;
+	if((aux & idx) == 0x00) {
+		return count;
+	}
+	else {
+		count++;
+		aux = (aux << 1);
+		for( int i = 0; i < 5; ++i) {
+			aux = (aux << 1);
+			if( (aux & idx) == 0x00) {
+				return count;
+			}
+			count++;
+		}
+	}
+	
+	return -1;
+	
 }
 
 // Verifica si el numero ascii pasado por parametro es un numero
@@ -223,7 +266,7 @@ void Parser::limpiarEspaciosMultiples(string& line) {
 // Post: la linea termian con sus caracteres en minuscula, sin stopwords, 
 // sin espacios multiples y unicamente con caracteres alfanumericos
 void Parser::procesarLinea(string& line) {
-	this->toLowerCase(line);
+	this->transform(line);
 	this->eliminarStopwords(line);
 	this->quitarNotAlfaNum(line);
 	this->limpiarEspaciosMultiples(line);
