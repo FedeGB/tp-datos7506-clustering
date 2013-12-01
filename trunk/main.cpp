@@ -7,6 +7,7 @@
 #include "LSH.h"
 #include "GeneradorCluster.h"
 #include "Persistor.h"
+#include "Listador.h"
 #include <iostream>
 #include <string.h>
 #include <string>
@@ -108,38 +109,13 @@ int main(int argc, char** argv) {
 	
 	
 	if(gflag) {
-		path = std::string("saves/clusters");
-		Indexador indexar(path);
-		char nombreDoc[100];
-		doc_actual = NULL;
-		while(indexar.quedanArchivos()) {
-			doc_actual = indexar.obtenerDocumento();
-			if(doc_actual->name == ".svn") {
-				delete doc_actual;
-				continue;
-			}
-			path.clear();
-			path = std::string("saves/clusters/");
-			path += doc_actual->name;
-			std::ifstream clus(path, std::ios::in);
-			memset(nombreDoc, ' ', 100);
-			clus >> nombreDoc;
-			cout << "Categoria: " << nombreDoc << endl;
-			cout << nombreDoc << endl;
-			clus >> nombreDoc;
-			while(!clus.eof()) {
-				cout << nombreDoc << endl;
-				memset(nombreDoc, ' ', 100);
-				clus >> nombreDoc;
-				
-			}
-			clus.close();
-			delete doc_actual;
-		}
-				
+		Listador listador;
+		listador.listarPorCluster();			
 		return 0;
 	}
 	if(lflag) {
+		Listador listador;
+		listador.listarPorDocumentos();
 		return 0;
 	}
 	if(aflag) {
