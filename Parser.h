@@ -13,9 +13,10 @@ private:
 	unsigned k;
 	std::string lineaActual;
 	//Convierte palabra a minúscula
-	void toLowerCase(std::string& palabra);
+	void transform(std::string& palabra);
 	//Devuelve true si la palabra es una stopword
 	bool esStopword(const std::string& palabra,std::string stopwords[]);
+	int codeUTF8(char caracter);	
 
 public:
 
@@ -23,7 +24,7 @@ public:
 	~Parser();
 	//Devuelve true si se llego al fin del archivo
 	bool eofDocument();
-
+	
 	void quitarStopword(const std::string& stpWord, std::string& line);
 	
 	bool esAlfaNum(int number);

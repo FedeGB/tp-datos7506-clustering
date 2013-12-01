@@ -163,6 +163,7 @@ int main(int argc, char** argv) {
 	cout << "Indexando arhchivos..." << endl;
 	while(indexar.quedanArchivos()) {
 		doc_actual = indexar.obtenerDocumento();
+		cout << "Indexando: " << doc_actual->name << endl;
 		parser = new Parser(indexar.Path+doc_actual->name,7);
 		vector<uint64_t>* hashings = new vector<uint64_t>(240);
 		while (parser->tieneShingle()) {
