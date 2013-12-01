@@ -2,8 +2,8 @@
 #include <iostream>
 #include <cmath>
 
-#define DIFDIST 0.1 // Parametro para diferencia de distancias entre documentos
-#define DIFCAL 0.1 // Parametro para diferencia de calidad de clusters
+#define DIFDIST 0.01 // Parametro para diferencia de distancias entre documentos
+#define DIFCAL 0.005 // Parametro para diferencia de calidad de clusters
 
 using std::vector;
 
@@ -15,11 +15,10 @@ double GeneradorCluster::calidad(std::vector<Cluster*>& conjuntoClusters) {
 	vector<Cluster*>::iterator it = conjuntoClusters.begin();
 	double calidad = 0;
 	while(it != conjuntoClusters.end()) {
-		//std::cout << "Calidad clus= " << (*it)->calidad() << std::endl;
 		calidad += (*it)->calidad();
 		++it;
 	}
-	return calidad/conjuntoClusters.size();
+	return calidad/(double)conjuntoClusters.size();
 }
 
 void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Document*>& documentos, vector<Cluster*>& conjuntoClusters, LSH& lsh) {
@@ -73,7 +72,6 @@ void GeneradorCluster::obtenerClusters(unsigned k, bool multiple, vector<Documen
 			++l;
 		}
 		// Agrego documento a cluster/s
-		//std::cout << "AGREGO DOC: " << documentos.at(i)->number << std::endl;
 		(conjuntoClusters.at(seleccion))->agregarDoc(documentos.at(i), lsh);
 		if(multiple) {
 			for(unsigned s = 0; s < selecciones.size(); ++s) {
@@ -106,6 +104,7 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 		calidadAct = this->calidad(conjuntoClusters);
 		//std::cout << "CALSIG: " << calidadSig << std::endl;
 		//std::cout << "CALANT: " << calidadAnt << std::endl;
+		//std::cout << "CALACT: " << calidadAct << std::endl;
 		difpre = calidadAct - calidadAnt;
 		difpost = calidadSig - calidadAct;
 		//std::cout << "DIFPRE: " << difpre << std::endl;

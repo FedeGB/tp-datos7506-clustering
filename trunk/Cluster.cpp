@@ -30,12 +30,14 @@ Cluster::Cluster(Document* lider) {
 
 double Cluster::calidad() {
 	unsigned n = (unsigned)this->documentos->size();
-	return (this->sumSim / ((n*(n-1))/2));
+	if(n == 1) {
+		return 0;
+	}
+	return (this->sumSim / (double)((n*(n-1))/2));
 }
 
 
 Document* Cluster::getClusteroide() {
-	//return (*(--this->documentos->end()))->documento;
 	return (this->clusteroide)->documento;
 }
 
@@ -44,8 +46,6 @@ void Cluster::agregarDoc(Document* doc, LSH& lsh) {
 	double dist_act;
 	Dupla *dupla_act, *dupla_insert;
 	dupla_insert = new Dupla(doc, 0);
-	//(*(--this->documentos->end()))->documento->notClusteroid();
-	(this->clusteroide)->documento->notClusteroid();
 	std::set<Dupla*>::iterator it = this->documentos->begin();
 	std::set<Dupla*>::iterator it_aux;
 	while(it != this->documentos->end()) {
@@ -55,15 +55,16 @@ void Cluster::agregarDoc(Document* doc, LSH& lsh) {
 		this->documentos->erase(it_aux);
 		numero_act = dupla_act->documento->number;
 		dist_act = lsh.distancia(numero_act, doc->number);
-		//std::cout << "DIST " << numero_act << " y " << doc->number << "= " << (dist_act) << std::endl;
 		this->sumSim += (1-dist_act);
 		dupla_insert->sumarDistancia(dist_act);
 		dupla_act->sumarDistancia(dist_act);
 		this->documentos->insert(dupla_act);
 	}
 	this->documentos->insert(dupla_insert);
-	(*(--this->documentos->end()))->documento->makeClusteroid();
-	this->clusteroide = (*(--this->documentos->end()));
+	if(this->documentos->size() > 2) {
+		(*(--this->documentos->end()))->documento->makeClusteroid();
+		this->clusteroide = (*(--this->documentos->end()));
+	}
 }
 
 void Cluster::iniciarDocumentos() {
