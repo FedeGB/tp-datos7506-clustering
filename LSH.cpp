@@ -4,6 +4,7 @@
 #include <random>
 #include <set>
 #include <chrono>
+#include <cmath>
 
 #ifndef BANDAS
 #define BANDAS 40
@@ -84,7 +85,11 @@ void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
 	std::mt19937_64 generator(seed);
 	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
 	set<unsigned> docsUsados;
-	while (docsUsados.size()!=2*k){
+	unsigned bigK = sqrt(this->n)/4;
+	if (bigK * k >= this->n){
+		bigK = 2;
+	}
+	while (docsUsados.size()<bigK*k){
 		unsigned lider = distribution(generator) % this->n;
 		docsUsados.insert(lider);
 	}

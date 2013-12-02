@@ -31,7 +31,7 @@ Cluster::Cluster(Document* lider) {
 double Cluster::calidad() {
 	unsigned n = (unsigned)this->documentos->size();
 	if(n == 1) {
-		return 0;
+		return 1;
 	}
 	return (this->sumSim / (double)((n*(n-1))/2));
 }
