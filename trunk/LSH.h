@@ -9,7 +9,7 @@ class LSH{
 private:
 	Bucket* buckets;
 	std::vector<std::vector<uint64_t>* >& hashmins;
-	std::vector<short>* vCantCand;
+	std::vector<unsigned>* vLideres;
 	unsigned n; //cantidad de documentos
 public:
 	LSH(unsigned,std::vector<std::vector<uint64_t>*>&);
