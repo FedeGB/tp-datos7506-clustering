@@ -23,6 +23,7 @@ public:
 	bool areCandidatos(unsigned, unsigned);
 	bool isDocument(std::vector<unsigned>&,unsigned char);
 	bool areCandidatos(unsigned, std::vector<unsigned>&);
+	bool vacio();
 	~Bucket();
 
 	void mostrar();

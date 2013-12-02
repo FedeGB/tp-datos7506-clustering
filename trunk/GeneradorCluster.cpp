@@ -92,7 +92,7 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 	unsigned posIni = (unsigned)floor(sqrt((double)N));
 	vector<Cluster*> conjuntoAux;
 	double calidadAct, calidadSig, calidadAnt, difpre, difpost;
-		
+	
 	while(posIni > 0) {
 		//std::cout << "POS INI: " << posIni << std::endl;
 		//std::cout << "k" << std::endl;

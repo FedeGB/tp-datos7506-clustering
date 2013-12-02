@@ -35,7 +35,7 @@ hashmins(vHashMin){
 	this->vCantCand = NULL;
 }
 void LSH::doLsh(){
-	for (int i = 0; i < 40; i++){
+	for (int i = 0; i < BANDAS; i++){
 		unsigned numDoc = 0;
 		for (vector<vector<uint64_t>*>::iterator it = this->hashmins.begin();
 		it != this->hashmins.end(); ++it){
@@ -55,8 +55,12 @@ void LSH::doLsh(){
 
 void LSH::initKLeaders(){
 	this->vCantCand = new vector<short>(this->n,0);
-	Bucket* it = &this->buckets[0];
+	Bucket* it = this->buckets;
 	for (unsigned i = 0; i < 2*this->n; i++){
+		if (it->vacio()){
+			it++;
+			continue;
+		}
 		for (unsigned char band = 0; band < BANDAS; band++){
 			for (unsigned k = 0; k < this->n; k++){
 				if (it->isDocument(k,band)){
@@ -71,10 +75,6 @@ void LSH::initKLeaders(){
 void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
 	if (this->vCantCand == NULL){
 		this->initKLeaders();
-		for (vector<short>::iterator it = this->vCantCand->begin(); it != this->vCantCand->end(); ++it){
-			std::cout<<*it;
-		}
-		std::cout<<std::endl;
 	}
 	while (lideres.size() > k){
 		lideres.pop_back();
@@ -155,4 +155,5 @@ unsigned LSH::masCercano(unsigned docNew){
 
 LSH::~LSH(){
 	delete[] this->buckets;
+	delete this->vCantCand;
 }
