@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string.h>
 #include <string>
+#include <sstream>
 #include <cmath>
 #include <unistd.h>
 #include <ctime>
@@ -122,6 +123,40 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	if(aflag) {
+		Persistor levantar;
+		vector<vector<uint64_t>* > hashClus;
+		levantar.cargarClusteroides(hashClus);
+		Parser *NewPars = new Parser(path, 7);
+		minHash minhash(7);
+		minhash.levantarHash();
+
+		vector<uint64_t>* hashNew = new vector<uint64_t>(240,18446744073709551615U);
+		while (NewPars->tieneShingle()) {
+			minhash.doMinHash(NewPars->obtenerShingle(), *hashNew);
+		}
+		hashClus.push_back(hashNew);
+		LSH fake(hashClus.size(), hashClus);
+		
+		unsigned adTo = fake.masCercano(hashClus.size()-1);
+		int po = path.size()-1;
+		while(path[po] != '/') {
+			--po;	
+		}
+		path.erase(0, po+1);
+		std::stringstream appendTo;
+		appendTo << "saves/clusters/cluster";
+		appendTo << (adTo+1);
+		appendTo << ".txt";
+		cout << "Agregado a: " << (adTo+1) << endl;
+		std::ofstream fCluster(appendTo.str().c_str(),std::ios::out | std::ios::app);
+		fCluster << path << endl;
+		
+		fCluster.close();
+		delete NewPars;
+		for(vector<vector<uint64_t>* >::iterator it = hashClus.begin(); it != hashClus.end(); ++it) {
+			delete (*it);
+		}
+		
 		return 0;
 	}
 	
@@ -176,6 +211,7 @@ int main(int argc, char** argv) {
 	cout << "Persistiendo clusters..." << endl;
 	Persistor persistor;
 	persistor.saveClusters(hashDocs,conjunto);
+	hashmin.persistirHash();
 
 	cout << "Finalizando..." << endl;	
 	// Liberamos memoria

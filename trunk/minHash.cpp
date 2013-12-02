@@ -1,5 +1,6 @@
 #include "minHash.h"
 #include <cmath>
+#include <fstream>
 
 #define BANDAS 40
 #define	FILAS 6
@@ -41,4 +42,27 @@ uint64_t minHash::calcFila(const string& shingle){
 	}
 	sum+= 1;
 	return sum;
+}
+
+void minHash::persistirHash() {
+	this->hashing.guardarValores();
+}
+
+void minHash::levantarHash() {
+	std::ifstream vHash("saves/valores.hash", std::ios::in | std::ifstream::binary);
+	std::vector<std::vector<uint64_t> > valoresCargados;
+	while (vHash.good()) {
+		std::vector<uint64_t> numeros;
+		unsigned int i=0;
+		while (vHash.good() && i<8) {
+			uint64_t num;
+			vHash.read((char*)&num,8);
+			vHash.peek();
+			numeros.push_back(num);
+			i++;
+		}
+		valoresCargados.push_back(numeros);
+	}
+	vHash.close();
+	this->hashing.levantarValores(valoresCargados);
 }
