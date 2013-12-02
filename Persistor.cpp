@@ -3,15 +3,30 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <dirent.h>
+#include <string>
+
+using std::string;
 
 Persistor::Persistor() {
 }
 
 Persistor::~Persistor() {
 }
+void cleanDirectory(const string& path){
+	struct dirent* nextFile;
+	DIR *theFolder;
+	string filepath;
+	theFolder = opendir(path.c_str());
+	while (nextFile = readdir(theFolder)){
+		filepath = path;
+		filepath += nextFile->d_name;
+		remove(filepath.c_str());
+	}
+}
 
 void Persistor::saveClusters(const std::vector<std::vector<uint64_t>* >& hashDocs, const std::vector<Cluster*>& clusters) {
-
+	cleanDirectory("saves/clusters/");
 	std::ofstream fClusteroids("saves/clusteroides.clus", std::ios::out | std::ofstream::binary | std::ios::trunc);
 	int count = 1;
 	for (std::vector<Cluster*>::const_iterator it = clusters.begin(); it != clusters.end(); ++it) {
