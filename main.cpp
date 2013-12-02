@@ -1,6 +1,5 @@
 #include "Parser.h"
 #include "Indexador.h"
-#include "minHash.h"
 #include "Document.h"
 #include "Cluster.h"
 #include "LSH.h"
@@ -205,7 +204,14 @@ int main(int argc, char** argv) {
 	else {
 		cout << "Realizando K-Means..." << endl;
 		generador.KMeans(cantDocs, multiple, docs, conjunto, lsHashing);
-		cout << "Se generaron "<<conjunto.size()<<" clusters..." << endl;
+		unsigned cantClusters = conjunto.size();
+		// std::vector<unsigned> vLideres;
+		// for (vector<Cluster*>::iterator it = conjunto.begin(); it != conjunto.end(); ++it){
+		// 	vLideres.push_back((*it)->getClusteroide()->number);
+		// }
+		// conjunto.clear();
+		// generador.obtenerClusters(cantClusters,multiple, docs, conjunto, lsHashing,&vLideres);
+		cout << "Se generaron "<<cantClusters<<" clusters..." << endl;
 	}
 
 	cout << "Persistiendo clusters..." << endl;

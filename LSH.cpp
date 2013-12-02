@@ -32,6 +32,7 @@ LSH::LSH(unsigned cantDocs,vector<vector<uint64_t>*>& vHashMin):
 hashmins(vHashMin){
 	this->buckets = new Bucket[cantDocs*2];
 	this->n = cantDocs;
+	this->vCantCand = NULL;
 }
 void LSH::doLsh(){
 	for (int i = 0; i < 40; i++){
@@ -52,69 +53,74 @@ void LSH::doLsh(){
 
 }
 
+void LSH::initKLeaders(){
+	this->vCantCand = new vector<short>(this->n,0);
+	Bucket* it = &this->buckets[0];
+	for (unsigned i = 0; i < 2*this->n; i++){
+		for (unsigned char band = 0; band < BANDAS; band++){
+			for (unsigned k = 0; k < this->n; k++){
+				if (it->isDocument(k,band)){
+					this->vCantCand->at(k) += it->size(band);
+				}
+			}
+		}
+		it++;
+	}
+}
+
+void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
+	if (this->vCantCand == NULL){
+		this->initKLeaders();
+		for (vector<short>::iterator it = this->vCantCand->begin(); it != this->vCantCand->end(); ++it){
+			std::cout<<*it;
+		}
+		std::cout<<std::endl;
+	}
+	while (lideres.size() > k){
+		lideres.pop_back();
+	}
+	unsigned pos = lideres.size();
+	while (lideres.size() < k){
+		lideres.push_back(this->vCantCand->at(pos));
+		pos++;
+	}
+}
+
 // void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
 // 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 // 	std::mt19937_64 generator(seed);
 // 	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
-// 	unsigned lider = distribution(generator) % this->n;
-// 	lideres.push_back(lider);
 // 	set<unsigned> docsUsados;
-// 	docsUsados.insert(lider);
-// 	for (int i = 0; i < k-1; i++){
-// 		bool elegido = false;
-// 		while (!elegido){
-// 			lider = distribution(generator) % this->n;
-// 			if (docsUsados.find(lider) != docsUsados.end()){
-// 				continue;
-// 			}
-// 			elegido = true;
-// 			for (int i = 0; i < (2*this->n); i++){
-// 				if (this->buckets[i].areCandidatos(lider,lideres)){
-// 					elegido = false;
-// 					break;
+// 	unsigned bigK = sqrt(this->n)/4;
+// 	if (bigK * k >= this->n){
+// 		bigK = 2;
+// 	}
+// 	while (docsUsados.size()<bigK*k){
+// 		unsigned lider = distribution(generator) % this->n;
+// 		docsUsados.insert(lider);
+// 	}
+// 	unsigned lider = *docsUsados.begin();
+// 	lideres.push_back(lider);
+// 	docsUsados.erase(lider);
+// 	while (lideres.size()<k){
+// 		double distMax = -1;
+// 		unsigned sigLider;
+// 		for (vector<unsigned>::iterator i = lideres.begin(); i != lideres.end(); ++i){
+// 			for (set<unsigned>::iterator j = docsUsados.begin(); j != docsUsados.end(); ++j){
+// 				if (*i == *j){
+// 					continue;
+// 				}
+// 				double distAux = this->distancia(*i,*j);
+// 				if (distAux > distMax){
+// 					distMax = distAux;
+// 					sigLider = *j;
 // 				}
 // 			}
 // 		}
-// 		lideres.push_back(lider);
-// 		docsUsados.insert(lider);
+// 		lideres.push_back(sigLider);
+// 		docsUsados.erase(sigLider);	
 // 	}
 // }
-
-void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
-	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-	std::mt19937_64 generator(seed);
-	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
-	set<unsigned> docsUsados;
-	unsigned bigK = sqrt(this->n)/4;
-	if (bigK * k >= this->n){
-		bigK = 2;
-	}
-	while (docsUsados.size()<bigK*k){
-		unsigned lider = distribution(generator) % this->n;
-		docsUsados.insert(lider);
-	}
-	unsigned lider = *docsUsados.begin();
-	lideres.push_back(lider);
-	docsUsados.erase(lider);
-	while (lideres.size()<k){
-		double distMax = -1;
-		unsigned sigLider;
-		for (vector<unsigned>::iterator i = lideres.begin(); i != lideres.end(); ++i){
-			for (set<unsigned>::iterator j = docsUsados.begin(); j != docsUsados.end(); ++j){
-				if (*i == *j){
-					continue;
-				}
-				double distAux = this->distancia(*i,*j);
-				if (distAux > distMax){
-					distMax = distAux;
-					sigLider = *j;
-				}
-			}
-		}
-		lideres.push_back(sigLider);
-		docsUsados.erase(sigLider);	
-	}
-}
 
 double LSH::distancia(unsigned doc1,unsigned doc2){
 	double similitud = 0.0;
