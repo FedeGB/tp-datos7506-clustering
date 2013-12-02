@@ -7,12 +7,14 @@
 
 class LSH{
 private:
-    Bucket* buckets;
-    std::vector<std::vector<uint64_t>* >& hashmins;
-    unsigned n; //cantidad de documentos
+	Bucket* buckets;
+	std::vector<std::vector<uint64_t>* >& hashmins;
+	std::vector<short>* vCantCand;
+	unsigned n; //cantidad de documentos
 public:
 	LSH(unsigned,std::vector<std::vector<uint64_t>*>&);
 	void doLsh();
+	void initKLeaders();
 	void getKLeaders(unsigned, std::vector<unsigned>&);
 	double distancia(unsigned,unsigned);
 	unsigned masCercano(unsigned);

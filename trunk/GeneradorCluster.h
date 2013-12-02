@@ -9,8 +9,8 @@ class GeneradorCluster {
 		GeneradorCluster();
 		~GeneradorCluster();
 		double calidad(std::vector<Cluster*>& conjuntoClusters);
-		void obtenerClusters(unsigned k, bool multiple, std::vector<Document*>& documentos, std::vector<Cluster*>& conjuntoClusters, LSH& lsh) ;
-		void KMeans(unsigned N, bool multiple, std::vector<Document*>& documentos, std::vector<Cluster*>& conjuntoClusters, LSH& lsh) ;
+		void obtenerClusters(unsigned, bool, std::vector<Document*>&, std::vector<Cluster*>&, LSH&, std::vector<unsigned>* = NULL);
+		void KMeans(unsigned N, bool multiple, std::vector<Document*>& documentos, std::vector<Cluster*>& conjuntoClusters, LSH& lsh);
 
 };
 
