@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <random>
+#include <set>
 #include <chrono>
 
 #ifndef BANDAS
@@ -12,6 +13,7 @@
 #endif // FILAS
 
 using std::vector;
+using std::set;
 
 unsigned FNV(vector<uint64_t>& v, unsigned m = 4294967295){
 	uint64_t hash = 14695981039346656037U;
@@ -52,11 +54,53 @@ void LSH::doLsh(){
 void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::mt19937_64 generator(seed);
-	std::uniform_int_distribution<uint64_t> distribution(0,this->n-1);
-	for (int i = 0; i < k; i++){
-		lideres.push_back(distribution(generator) % this->n);
+	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
+	unsigned lider = distribution(generator) % this->n;
+	lideres.push_back(lider);
+	set<unsigned> docsUsados;
+	docsUsados.insert(lider);
+	for (int i = 0; i < k-1; i++){
+		bool elegido = false;
+		while (!elegido){
+			lider = distribution(generator) % this->n;
+			if (docsUsados.find(lider) != docsUsados.end()){
+				continue;
+			}
+			elegido = true;
+			for (int i = 0; i < (2*this->n); i++){
+				if (this->buckets[i].areCandidatos(lider,lideres)){
+					elegido = false;
+					break;
+				}
+			}
+		}
+		lideres.push_back(lider);
+		docsUsados.insert(lider);
 	}
 }
+
+// void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
+// 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+// 	std::mt19937_64 generator(seed);
+// 	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
+// 	set<unsigned> docsUsados;
+// 	while (docsUsados.size()!=k){
+// 		unsigned lider = distribution(generator) % this->n;
+// 		docsUsados.insert(lider);
+// 	}
+// 	// vector<double> distancias;
+// 	// for (set<unsigned>::iterator i = docsUsados.begin(); i != docsUsados.end(); ++i){
+// 	// 	for (set<unsigned>::iterator j = docsUsados.begin(); j != docsUsados.end(); ++j){
+// 	// 		if (*i == *j){
+// 	// 			continue;
+// 	// 		}
+// 	// 		distancias.push_back(this->distancia(*i,*j));
+// 	// 	}
+// 	// }
+// 	for (set<unsigned>::iterator it = docsUsados.begin(); it != docsUsados.end(); ++it){
+// 		lideres.push_back(*it);
+// 	}
+// }
 
 double LSH::distancia(unsigned doc1,unsigned doc2){
 	double similitud = 0.0;
@@ -73,6 +117,21 @@ double LSH::distancia(unsigned doc1,unsigned doc2){
 	similitud = (double)cantIguales/(double)(BANDAS*FILAS);
 	return 1.0-similitud;
 }
+
+unsigned LSH::masCercano(unsigned docNew){
+	unsigned distance = -1; //-1 es todos 1 o sea el max valor del unsigned
+	unsigned doc = 0;
+	for (unsigned i = 0; i < this->hashmins.size(); i++){
+		if (i == docNew){continue;}
+		unsigned distAux = this->distancia(i,docNew);
+		if (distAux <= distance){
+			distance = distAux;
+			doc = i;
+		}
+	}
+	return doc;
+}
+
 
 LSH::~LSH(){
 	delete[] this->buckets;

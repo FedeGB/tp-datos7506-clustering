@@ -20,6 +20,9 @@ public:
 	void agregarDoc(unsigned,unsigned char);
 	unsigned size(unsigned char);
 	bool isDocument(unsigned,unsigned char);
+	bool areCandidatos(unsigned, unsigned);
+	bool isDocument(std::vector<unsigned>&,unsigned char);
+	bool areCandidatos(unsigned, std::vector<unsigned>&);
 	~Bucket();
 
 	void mostrar();
