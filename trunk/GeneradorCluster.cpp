@@ -3,7 +3,7 @@
 #include <cmath>
 
 #define DIFDIST 0.01 // Parametro para diferencia de distancias entre documentos
-#define DIFCAL 0.005 // Parametro para diferencia de calidad de clusters
+#define DIFCAL 0.001 // Parametro para diferencia de calidad de clusters
 
 using std::vector;
 
@@ -107,9 +107,9 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 		//std::cout << "CALACT: " << calidadAct << std::endl;
 		difpre = calidadAct - calidadAnt;
 		difpost = calidadSig - calidadAct;
-		//std::cout << "DIFPRE: " << difpre << std::endl;
-		//std::cout << "DIFPOST: " << difpost << std::endl;
-		//std::cout << "DIFCAL: " << difpost - difpre << std::endl;
+		std::cout << "DIFPRE: " << difpre << std::endl;
+		std::cout << "DIFPOST: " << difpost << std::endl;
+		std::cout << "DIFCAL: " << difpost - difpre << std::endl;
 		if(difpost - difpre > DIFCAL) { // Este tema hay que ver bien los valores y demas...
 			posIni = (unsigned)floor(sqrt((double)(N-posIni))) + posIni;
 		}
