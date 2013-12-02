@@ -15,6 +15,7 @@ public:
 	void doLsh();
 	void getKLeaders(unsigned, std::vector<unsigned>&);
 	double distancia(unsigned,unsigned);
+	unsigned masCercano(unsigned);
 	~LSH();
 };
 

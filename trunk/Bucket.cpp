@@ -49,6 +49,43 @@ bool Bucket::isDocument(unsigned doc,unsigned char band){
 	}
 	return false;
 }
+
+bool Bucket::isDocument(vector<unsigned>& vDocs, unsigned char band){
+	unsigned pos = this->offsets[band];
+	if (band != this->banda0 && pos == 0){
+		return false;
+	}
+	vector<unsigned>::iterator end;
+	end = this->docs.begin() + this->offsets[band+1];
+	for (vector<unsigned>::iterator it = this->docs.begin()+pos;
+	it != end; ++it){
+		for (vector<unsigned>::iterator i = vDocs.begin(); i != vDocs.end(); ++i){
+			if (*it == *i){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Bucket::areCandidatos(unsigned doc1, unsigned doc2){
+	for (unsigned i = 0; i < BANDAS; i++){
+		if (this->isDocument(doc1,i) && this->isDocument(doc2,i)){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Bucket::areCandidatos(unsigned doc1, vector<unsigned>& vDocs){
+	for (unsigned i = 0; i < BANDAS; i++){
+		if (this->isDocument(doc1,i) && this->isDocument(vDocs,i)){
+			return true;
+		}
+	}
+	return false;
+}
+
 Bucket::~Bucket(){}
 
 void Bucket::mostrar(){
