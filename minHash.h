@@ -14,6 +14,8 @@ public:
 	~minHash();
 	void doMinHash(const std::string&, std::vector<uint64_t>&);
 	unsigned masCercano(std::vector<std::vector<uint64_t>*>& vHashMin, std::vector<uint64_t>& vHashNew);
+	void persistirHash();
+	void levantarHash();
 
 private:
 	uint64_t calcFila(const std::string&);

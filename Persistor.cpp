@@ -23,6 +23,7 @@ void cleanDirectory(const string& path){
 		filepath += nextFile->d_name;
 		remove(filepath.c_str());
 	}
+	closedir(theFolder);
 }
 
 void Persistor::saveClusters(const std::vector<std::vector<uint64_t>* >& hashDocs, const std::vector<Cluster*>& clusters) {
@@ -66,8 +67,7 @@ void Persistor::cargarClusteroides(std::vector<std::vector<uint64_t>* >& hashDoc
 		while (fClusteroids.good() && i<240) {
 			uint64_t hash;
 			fClusteroids.read((char*)&hash,8);
-			//fClusteroids >> hash;
-			std::cout << "se guardo " << "clusteroide "<< clusteroide <<" hash: " << i << " " << hash << std::endl;
+			fClusteroids.peek();
 			hashes->push_back(hash);
 			i++;
 		}

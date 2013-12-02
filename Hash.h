@@ -16,6 +16,8 @@ public:
 	explicit Hash(unsigned= TAMANIO);
 	~Hash();
 	uint64_t hashear(uint64_t, unsigned);
+	void levantarValores(std::vector<std::vector<uint64_t> > valoresPrevios);
+	void guardarValores();
 private:
 	void splitClave(uint64_t, unsigned char[]);
 

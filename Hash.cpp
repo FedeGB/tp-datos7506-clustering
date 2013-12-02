@@ -2,6 +2,7 @@
 #include <chrono>
 #include <random>
 #include <cstdlib>
+#include <fstream>
 
 #define N 8
 
@@ -52,4 +53,18 @@ uint64_t Hash::hashear(uint64_t valorAHashear, unsigned numeroDeFuncion) {
 	unsigned char buffer[N];
 	this->splitClave(valorAHashear,buffer);
 	return this->calcularFuncion(numeroDeFuncion,buffer);
+}
+
+void Hash::levantarValores(std::vector<std::vector<uint64_t> > valoresPrevios) {
+	this->valoresGenerados = valoresPrevios;
+}
+
+void Hash::guardarValores(){ 
+	std::ofstream vHashing("saves/valores.hash", std::ios::out | std::ofstream::binary | std::ios::trunc);
+	for(std::vector<std::vector<uint64_t> >::iterator it = this->valoresGenerados.begin(); it != this->valoresGenerados.end(); ++it) {
+		for(int i = 0; i < N; ++i) {
+			vHashing.write((char*)&((*it).at(i)),8);
+		}
+	}
+	vHashing.close();
 }
