@@ -8,26 +8,37 @@ Bucket::Bucket(){
 	for (int i = 0; i < BANDAS+1; i++){
 		this->offsets[i] = 0;
 	}
-	this->banda0 = -1;
+	this->banda0 = 0;
 }
 
+bool Bucket::vacio(){
+	return this->docs.size() == 0;
+}
+
+// void Bucket::agregarDoc(unsigned doc,unsigned char band){
+// 	unsigned pos = this->offsets[band];
+// 	if (pos == 0 && band != banda0){
+// 		pos = this->offsets[band] = this->docs.size();
+// 		if (this->docs.size() == 0){
+// 			this->banda0 = band;
+// 		}
+// 	}
+// 	unsigned posSig = this->offsets[band+1];
+// 	if (posSig == 0){
+// 		this->docs.push_back(doc);
+// 		this->offsets[band+1] = pos +1;
+// 	} else {
+// 		vector<unsigned>::iterator it = this->docs.begin();
+// 		it+= pos;
+// 		this->docs.insert(it,doc);
+// 		this->offsets[band+1] += 1;
+// 	}
+// }
+
 void Bucket::agregarDoc(unsigned doc,unsigned char band){
-	unsigned pos = this->offsets[band];
-	if (pos == 0 && band != banda0){
-		pos = this->offsets[band] = this->docs.size();
-		if (this->docs.size() == 0){
-			this->banda0 = band;
-		}
-	}
-	unsigned posSig = this->offsets[band+1];
-	if (posSig == 0){
-		this->docs.push_back(doc);
-		this->offsets[band+1] = pos +1;
-	} else {
-		vector<unsigned>::iterator it = this->docs.begin();
-		it+= pos;
-		this->docs.insert(it,doc);
-		this->offsets[band+1] += 1;
+	this->docs.push_back(doc);
+	for (unsigned i = band+1; i < BANDAS+1; i++){
+		this->offsets[i]++;
 	}
 }
 
@@ -36,7 +47,7 @@ unsigned Bucket::size(unsigned char band){
 }
 bool Bucket::isDocument(unsigned doc,unsigned char band){
 	unsigned pos = this->offsets[band];
-	if (band != this->banda0 && pos == 0){
+	if (pos == 0 && band != this->banda0){
 		return false;
 	}
 	vector<unsigned>::iterator end;
