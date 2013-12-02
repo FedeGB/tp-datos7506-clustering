@@ -113,9 +113,9 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 		//std::cout << "CALACT: " << calidadAct << std::endl;
 		difpre = calidadAct - calidadAnt;
 		difpost = calidadSig - calidadAct;
-		std::cout << "DIFPRE: " << difpre << std::endl;
-		std::cout << "DIFPOST: " << difpost << std::endl;
-		std::cout << "DIFCAL: " << difpost - difpre << std::endl;
+		// std::cout << "DIFPRE: " << difpre << std::endl;
+		// std::cout << "DIFPOST: " << difpost << std::endl;
+		// std::cout << "DIFCAL: " << difpost - difpre << std::endl;
 		if(difpost - difpre > DIFCAL) { // Este tema hay que ver bien los valores y demas...
 			posIni = (unsigned)floor(sqrt((double)(N-posIni))/4) + posIni;
 		}

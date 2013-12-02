@@ -5,6 +5,8 @@
 #include <set>
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
+#include "qsort.h"
 
 #ifndef BANDAS
 #define BANDAS 40
@@ -32,7 +34,7 @@ LSH::LSH(unsigned cantDocs,vector<vector<uint64_t>*>& vHashMin):
 hashmins(vHashMin){
 	this->buckets = new Bucket[cantDocs*2];
 	this->n = cantDocs;
-	this->vCantCand = NULL;
+	this->vLideres = NULL;
 }
 void LSH::doLsh(){
 	for (int i = 0; i < BANDAS; i++){
@@ -54,7 +56,8 @@ void LSH::doLsh(){
 }
 
 void LSH::initKLeaders(){
-	this->vCantCand = new vector<short>(this->n,0);
+	this->vLideres = new vector<unsigned>();
+	vector<short>* vCantCand = new vector<short>(this->n,0);
 	Bucket* it = this->buckets;
 	for (unsigned i = 0; i < 2*this->n; i++){
 		if (it->vacio()){
@@ -64,16 +67,22 @@ void LSH::initKLeaders(){
 		for (unsigned char band = 0; band < BANDAS; band++){
 			for (unsigned k = 0; k < this->n; k++){
 				if (it->isDocument(k,band)){
-					this->vCantCand->at(k) += it->size(band);
+					vCantCand->at(k) += it->size(band);
 				}
 			}
 		}
 		it++;
 	}
+	for (unsigned i = 0; i < this->n; i++){
+		this->vLideres->push_back(i);
+	}
+	qsort<vector<short>::iterator>(vCantCand->begin(),vCantCand->end(), this->vLideres->begin(),this->vLideres->end());
+
+	delete vCantCand;
 }
 
 void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
-	if (this->vCantCand == NULL){
+	if (this->vLideres == NULL){
 		this->initKLeaders();
 	}
 	while (lideres.size() > k){
@@ -81,7 +90,8 @@ void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
 	}
 	unsigned pos = lideres.size();
 	while (lideres.size() < k){
-		lideres.push_back(this->vCantCand->at(pos));
+		std::cout<<"Pos: "<<pos<<" : "<<(this->vLideres->at(pos))<<std::endl;
+		lideres.push_back(this->vLideres->at(pos));
 		pos++;
 	}
 }
@@ -155,5 +165,5 @@ unsigned LSH::masCercano(unsigned docNew){
 
 LSH::~LSH(){
 	delete[] this->buckets;
-	delete this->vCantCand;
+	delete this->vLideres;
 }
