@@ -13,6 +13,7 @@
 #include <string>
 #include <cmath>
 #include <unistd.h>
+#include <ctime>
 // http://www.gnu.org/software/libc/manual/html_node/Getopt.html unistd.h 'man'
 
 #define ARGERROR -1
@@ -20,7 +21,10 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-	
+	time_t inicio;
+	time(&inicio);
+
+
 	if( argc < 2 ) {
 		fprintf(stderr, "La cantidad de argumentos es insuficiente\n");
 		return ARGERROR;
@@ -137,7 +141,7 @@ int main(int argc, char** argv) {
 	Cluster* cluster;
 	unsigned cantDocs = 0;
 	
-	cout << "Indexando arhchivos..." << endl;
+	cout << "Indexando archivos..." << endl;
 	while(indexar.quedanArchivos()) {
 		doc_actual = indexar.obtenerDocumento();
 		cout << "Indexando: " << doc_actual->name << endl;
@@ -185,5 +189,10 @@ int main(int argc, char** argv) {
 		delete (*ite);
 	}
 	
+	time_t fin;
+	time(&fin);
+
+	cout<<"La ejecución tardó: "<<difftime(fin,inicio)<<" segundos."<<endl;
+
 	return 0;
 }

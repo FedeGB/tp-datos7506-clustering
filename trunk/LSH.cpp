@@ -51,56 +51,56 @@ void LSH::doLsh(){
 
 }
 
-void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
-	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-	std::mt19937_64 generator(seed);
-	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
-	unsigned lider = distribution(generator) % this->n;
-	lideres.push_back(lider);
-	set<unsigned> docsUsados;
-	docsUsados.insert(lider);
-	for (int i = 0; i < k-1; i++){
-		bool elegido = false;
-		while (!elegido){
-			lider = distribution(generator) % this->n;
-			if (docsUsados.find(lider) != docsUsados.end()){
-				continue;
-			}
-			elegido = true;
-			for (int i = 0; i < (2*this->n); i++){
-				if (this->buckets[i].areCandidatos(lider,lideres)){
-					elegido = false;
-					break;
-				}
-			}
-		}
-		lideres.push_back(lider);
-		docsUsados.insert(lider);
-	}
-}
-
 // void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
 // 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 // 	std::mt19937_64 generator(seed);
 // 	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
+// 	unsigned lider = distribution(generator) % this->n;
+// 	lideres.push_back(lider);
 // 	set<unsigned> docsUsados;
-// 	while (docsUsados.size()!=k){
-// 		unsigned lider = distribution(generator) % this->n;
+// 	docsUsados.insert(lider);
+// 	for (int i = 0; i < k-1; i++){
+// 		bool elegido = false;
+// 		while (!elegido){
+// 			lider = distribution(generator) % this->n;
+// 			if (docsUsados.find(lider) != docsUsados.end()){
+// 				continue;
+// 			}
+// 			elegido = true;
+// 			for (int i = 0; i < (2*this->n); i++){
+// 				if (this->buckets[i].areCandidatos(lider,lideres)){
+// 					elegido = false;
+// 					break;
+// 				}
+// 			}
+// 		}
+// 		lideres.push_back(lider);
 // 		docsUsados.insert(lider);
 // 	}
-// 	// vector<double> distancias;
-// 	// for (set<unsigned>::iterator i = docsUsados.begin(); i != docsUsados.end(); ++i){
-// 	// 	for (set<unsigned>::iterator j = docsUsados.begin(); j != docsUsados.end(); ++j){
-// 	// 		if (*i == *j){
-// 	// 			continue;
-// 	// 		}
-// 	// 		distancias.push_back(this->distancia(*i,*j));
-// 	// 	}
-// 	// }
-// 	for (set<unsigned>::iterator it = docsUsados.begin(); it != docsUsados.end(); ++it){
-// 		lideres.push_back(*it);
-// 	}
 // }
+
+void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::mt19937_64 generator(seed);
+	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
+	set<unsigned> docsUsados;
+	while (docsUsados.size()!=k){
+		unsigned lider = distribution(generator) % this->n;
+		docsUsados.insert(lider);
+	}
+	// vector<double> distancias;
+	// for (set<unsigned>::iterator i = docsUsados.begin(); i != docsUsados.end(); ++i){
+	// 	for (set<unsigned>::iterator j = docsUsados.begin(); j != docsUsados.end(); ++j){
+	// 		if (*i == *j){
+	// 			continue;
+	// 		}
+	// 		distancias.push_back(this->distancia(*i,*j));
+	// 	}
+	// }
+	for (set<unsigned>::iterator it = docsUsados.begin(); it != docsUsados.end(); ++it){
+		lideres.push_back(*it);
+	}
+}
 
 double LSH::distancia(unsigned doc1,unsigned doc2){
 	double similitud = 0.0;
@@ -119,11 +119,11 @@ double LSH::distancia(unsigned doc1,unsigned doc2){
 }
 
 unsigned LSH::masCercano(unsigned docNew){
-	unsigned distance = -1; //-1 es todos 1 o sea el max valor del unsigned
+	double distance = 2; //la distancia está entre 0 y 1
 	unsigned doc = 0;
 	for (unsigned i = 0; i < this->hashmins.size(); i++){
 		if (i == docNew){continue;}
-		unsigned distAux = this->distancia(i,docNew);
+		double distAux = this->distancia(i,docNew);
 		if (distAux <= distance){
 			distance = distAux;
 			doc = i;
