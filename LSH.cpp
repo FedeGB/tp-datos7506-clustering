@@ -84,21 +84,30 @@ void LSH::getKLeaders(unsigned k, vector<unsigned>& lideres){
 	std::mt19937_64 generator(seed);
 	std::uniform_int_distribution<uint64_t> distribution(0,this->n);
 	set<unsigned> docsUsados;
-	while (docsUsados.size()!=k){
+	while (docsUsados.size()!=2*k){
 		unsigned lider = distribution(generator) % this->n;
 		docsUsados.insert(lider);
 	}
-	// vector<double> distancias;
-	// for (set<unsigned>::iterator i = docsUsados.begin(); i != docsUsados.end(); ++i){
-	// 	for (set<unsigned>::iterator j = docsUsados.begin(); j != docsUsados.end(); ++j){
-	// 		if (*i == *j){
-	// 			continue;
-	// 		}
-	// 		distancias.push_back(this->distancia(*i,*j));
-	// 	}
-	// }
-	for (set<unsigned>::iterator it = docsUsados.begin(); it != docsUsados.end(); ++it){
-		lideres.push_back(*it);
+	unsigned lider = *docsUsados.begin();
+	lideres.push_back(lider);
+	docsUsados.erase(lider);
+	while (lideres.size()<k){
+		double distMax = -1;
+		unsigned sigLider;
+		for (vector<unsigned>::iterator i = lideres.begin(); i != lideres.end(); ++i){
+			for (set<unsigned>::iterator j = docsUsados.begin(); j != docsUsados.end(); ++j){
+				if (*i == *j){
+					continue;
+				}
+				double distAux = this->distancia(*i,*j);
+				if (distAux > distMax){
+					distMax = distAux;
+					sigLider = *j;
+				}
+			}
+		}
+		lideres.push_back(sigLider);
+		docsUsados.erase(sigLider);	
 	}
 }
 

@@ -84,6 +84,7 @@ void Listador::listarPorCluster() {
 	Indexador indexar(path);
 	char nombreDoc[100];
 	Document* doc_actual = NULL;
+	unsigned numCategoria = 1;
 	while(indexar.quedanArchivos()) {
 		std::cout<<std::endl;
 		doc_actual = indexar.obtenerDocumento();
@@ -97,7 +98,7 @@ void Listador::listarPorCluster() {
 		std::ifstream clus(path, std::ios::in);
 		memset(nombreDoc, ' ', 100);
 		clus.getline(nombreDoc, 100);
-		std::cout << "CATEGORIA: " << nombreDoc << std::endl;
+		std::cout << "CATEGORIA "<< numCategoria <<" : " << nombreDoc << std::endl;
 		std::cout << nombreDoc << std::endl;
 		clus.getline(nombreDoc, 100);
 		while(!clus.eof()) {
@@ -108,6 +109,7 @@ void Listador::listarPorCluster() {
 		}
 		clus.close();
 		delete doc_actual;
+		numCategoria++;
 	}
 	std::cout<<std::endl;
 

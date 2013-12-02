@@ -1,5 +1,4 @@
 #include "Parser.h"
-#include "Hash.h"
 #include "Indexador.h"
 #include "minHash.h"
 #include "Document.h"
@@ -171,6 +170,7 @@ int main(int argc, char** argv) {
 	else {
 		cout << "Realizando K-Means..." << endl;
 		generador.KMeans(cantDocs, multiple, docs, conjunto, lsHashing);
+		cout << "Se generaron "<<conjunto.size()<<" clusters..." << endl;
 	}
 
 	cout << "Persistiendo clusters..." << endl;
