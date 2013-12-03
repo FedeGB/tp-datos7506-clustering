@@ -92,20 +92,25 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 	unsigned posIni = (unsigned)floor(sqrt((double)N));
 	vector<Cluster*> conjuntoAux;
 	double calidadAct, calidadSig, calidadAnt, difpre, difpost;
-	
+	unsigned dsplz = (unsigned)(floor(sqrt(N-posIni))/4);
+
 	while(posIni > 0) {
+		std::vector<unsigned> vLideres;
+		lsh.getKLeaders(posIni, vLideres);
 		//std::cout << "POS INI: " << posIni << std::endl;
 		//std::cout << "k" << std::endl;
-		this->obtenerClusters(posIni, multiple, documentos, conjuntoClusters, lsh);
+		this->obtenerClusters(posIni, multiple, documentos, conjuntoClusters, lsh, &vLideres);
 		//std::cout << "k+1" << std::endl;
-		this->obtenerClusters(posIni+1, multiple, documentos, conjuntoAux, lsh);
+		lsh.getKLeaders(posIni + dsplz, vLideres);
+		this->obtenerClusters(posIni + dsplz, multiple, documentos, conjuntoAux, lsh, &vLideres);
 		calidadSig = this->calidad(conjuntoAux);
 		for(vector<Cluster*>::iterator ite = conjuntoAux.begin(); ite != conjuntoAux.end(); ++ite) {
 			delete (*ite);
 		}
 		conjuntoAux.clear();
 		//std::cout << "k-1" << std::endl;
-		this->obtenerClusters(posIni-1, multiple, documentos, conjuntoAux, lsh);
+		lsh.getKLeaders(posIni - dsplz, vLideres);
+		this->obtenerClusters(posIni - dsplz, multiple, documentos, conjuntoAux, lsh, &vLideres);
 		calidadAnt = this->calidad(conjuntoAux);
 		calidadAct = this->calidad(conjuntoClusters);
 		//std::cout << "CALSIG: " << calidadSig << std::endl;
@@ -116,8 +121,8 @@ void GeneradorCluster::KMeans(unsigned N, bool multiple, vector<Document*>& docu
 		// std::cout << "DIFPRE: " << difpre << std::endl;
 		// std::cout << "DIFPOST: " << difpost << std::endl;
 		// std::cout << "DIFCAL: " << difpost - difpre << std::endl;
-		if(difpost - difpre > DIFCAL) { // Este tema hay que ver bien los valores y demas...
-			posIni = (unsigned)floor(sqrt((double)(N-posIni))/4) + posIni;
+		if(difpost > DIFCAL){ // - difpre > DIFCAL) { // Este tema hay que ver bien los valores y demas...
+			posIni = dsplz + posIni;
 		}
 		else {
 			for(vector<Cluster*>::iterator ite = conjuntoAux.begin(); ite != conjuntoAux.end(); ++ite) {

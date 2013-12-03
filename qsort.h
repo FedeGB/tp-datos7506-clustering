@@ -52,7 +52,9 @@ void quick_sort( BidirectionalIterator first, BidirectionalIterator last, Compar
 					--rightInd;
 				}
 				std::iter_swap(left, right);
-				std::iter_swap(leftInd,rightInd);
+				unsigned aux = *leftInd;
+				*leftInd = *rightInd;
+				*rightInd = aux;
 			}
 		}
 
